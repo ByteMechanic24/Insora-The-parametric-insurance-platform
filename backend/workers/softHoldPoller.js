@@ -1,3 +1,4 @@
+const http = require('http');
 const mongoose = require('mongoose');
 const axios = require('axios');
 const dayjs = require('dayjs');
@@ -211,6 +212,22 @@ async function renewWeeklyPremiums(db, redis) {
 async function main() {
   await connectDB();
   const redis = redisClient;
+  const port = Number(process.env.PORT || 8003);
+
+  const server = http.createServer((req, res) => {
+    if (req.url === '/health') {
+      res.writeHead(200, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ status: 'ok', service: 'soft-hold-worker' }));
+      return;
+    }
+
+    res.writeHead(200, { 'Content-Type': 'text/plain' });
+    res.end('GigShield soft-hold worker is running');
+  });
+
+  server.listen(port, () => {
+    console.log(`GigShield soft-hold worker health server listening on PORT ${port}`);
+  });
   
   // Run soft-hold recheck every 30 minutes seamlessly bounds mapped 
   setInterval(async () => {
@@ -235,6 +252,8 @@ async function main() {
   }, 60 * 60 * 1000);
 
   console.log("GigShield background worker started actively polling efficiently natively.");
+
+  await recheckSoftHoldClaims(null, redis);
 }
 
 // Intercept local invocation executing mappings exclusively smoothly 
