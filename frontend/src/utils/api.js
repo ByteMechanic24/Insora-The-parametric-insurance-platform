@@ -69,6 +69,13 @@ export const registerWorker = (data) => handle(api.post('/workers/register', dat
 export const loginWorker = (data) => handle(api.post('/workers/sign-in', data));
 export const restoreWorkerSession = () => handle(api.get('/workers/session'));
 export const signOutWorker = () => handle(api.post('/workers/sign-out'));
+export const warmServices = () =>
+    api.get('/webhooks/warmup', {
+        timeout: 15000,
+        headers: {
+            'Cache-Control': 'no-store',
+        },
+    }).catch(() => null);
 export const submitClaim = (data) => handle(api.post('/claims', data));
 export const getClaims = (params = {}) => handle(api.get('/claims', { params }));
 export const getMockOrders = () => handle(api.get('/claims/mock-orders'));

@@ -1,6 +1,8 @@
 const express = require('express');
 const crypto = require('crypto');
+const axios = require('axios');
 const Claim = require('../models/Claim');
+const redisClient = require('../db/redisClient');
 
 const router = express.Router();
 
@@ -9,6 +11,45 @@ async function sendWhatsapp(workerId, messageType, context = {}) {
   // TODO Phase 3: Connect to real messaging endpoint mappings natively securely
   console.log(`[WHATSAPP WEBHOOK RESPONSE MOCK] Sent ${messageType} for context worker boundary strictly.`);
 }
+
+router.get('/warmup', async (req, res) => {
+  const checks = {};
+
+  try {
+    await redisClient.redis.ping();
+    checks.redis = 'ok';
+  } catch (error) {
+    checks.redis = 'error';
+  }
+
+  const dependencies = [
+    ['ml', process.env.ML_SERVICE_URL],
+    ['platform', process.env.PLATFORM_API_URL],
+  ];
+
+  await Promise.all(
+    dependencies.map(async ([label, baseUrl]) => {
+      if (!baseUrl) {
+        checks[label] = 'missing';
+        return;
+      }
+
+      try {
+        await axios.get(`${baseUrl.replace(/\/$/, '')}/health`, { timeout: 4000 });
+        checks[label] = 'ok';
+      } catch (error) {
+        checks[label] = 'error';
+      }
+    })
+  );
+
+  res.set('Cache-Control', 'no-store');
+  res.json({
+    status: 'ok',
+    warmedAt: new Date().toISOString(),
+    checks,
+  });
+});
 
 /**
  * Automated Webhooks Routing Interceptor

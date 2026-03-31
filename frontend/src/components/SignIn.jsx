@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { ArrowRight, CheckCircle2, KeyRound, ShieldCheck } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useWorker } from '../App';
-import { loginWorker, persistWorkerAuth } from '../utils/api';
+import { loginWorker, persistWorkerAuth, warmServices } from '../utils/api';
 
 export default function SignIn() {
   const navigate = useNavigate();
@@ -35,6 +35,7 @@ export default function SignIn() {
         password,
       });
       persistWorkerAuth(response);
+      warmServices();
       setWorker(response.worker);
       navigate(response.worker?.onboardingCompleted ? '/dashboard' : '/onboarding', { replace: true });
     } catch (signInError) {

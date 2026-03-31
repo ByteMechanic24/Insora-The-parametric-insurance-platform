@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { ArrowRight, Mail, Phone, ShieldCheck } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useWorker } from '../App';
-import { persistWorkerAuth, signUpWorker } from '../utils/api';
+import { persistWorkerAuth, signUpWorker, warmServices } from '../utils/api';
 
 export default function SignUp() {
   const navigate = useNavigate();
@@ -48,6 +48,7 @@ export default function SignUp() {
       });
 
       persistWorkerAuth(response);
+      warmServices();
       setWorker(response.worker);
       navigate('/onboarding', { replace: true });
     } catch (signUpError) {

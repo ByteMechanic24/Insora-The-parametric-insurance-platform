@@ -8,7 +8,7 @@ import SignUp from './components/SignUp';
 import Dashboard from './components/Dashboard';
 import ClaimSubmit from './components/ClaimSubmit';
 import ClaimHistory from './components/ClaimHistory';
-import { clearWorkerAuth, restoreWorkerSession, signOutWorker } from './utils/api';
+import { clearWorkerAuth, restoreWorkerSession, signOutWorker, warmServices } from './utils/api';
 
 const WorkerContext = createContext(null);
 
@@ -48,6 +48,7 @@ function WorkerProvider({ children }) {
   };
 
   useEffect(() => {
+    warmServices();
     const sessionToken = localStorage.getItem('gigshield_session');
     if (!sessionToken) {
       setWorkerState(null);
@@ -61,6 +62,7 @@ function WorkerProvider({ children }) {
         if (payload?.worker) {
           localStorage.setItem('gigshield_worker', JSON.stringify(payload.worker));
           setWorkerState(payload.worker);
+          warmServices();
         } else {
           clearWorkerAuth();
           setWorkerState(null);
