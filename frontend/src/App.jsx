@@ -36,7 +36,15 @@ function WorkerProvider({ children }) {
       return null;
     }
   });
-  const [authReady, setAuthReady] = useState(false);
+  const [authReady, setAuthReady] = useState(() => {
+    try {
+      const sessionToken = localStorage.getItem('gigshield_session');
+      const saved = localStorage.getItem('gigshield_worker');
+      return Boolean(sessionToken && saved);
+    } catch {
+      return false;
+    }
+  });
 
   const setWorker = (nextWorker) => {
     if (nextWorker) {
