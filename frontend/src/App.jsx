@@ -9,6 +9,7 @@ import Dashboard from './components/Dashboard';
 import ClaimSubmit from './components/ClaimSubmit';
 import ClaimHistory from './components/ClaimHistory';
 import { clearWorkerAuth, restoreWorkerSession, signOutWorker, warmServices } from './utils/api';
+import { clearWorkerSnapshots, primeWorkerReads } from './utils/workerDataPrefetch';
 
 const WorkerContext = createContext(null);
 
@@ -40,8 +41,10 @@ function WorkerProvider({ children }) {
   const setWorker = (nextWorker) => {
     if (nextWorker) {
       localStorage.setItem('gigshield_worker', JSON.stringify(nextWorker));
+      primeWorkerReads();
     } else {
       clearWorkerAuth();
+      clearWorkerSnapshots();
     }
 
     setWorkerState(nextWorker);
@@ -63,13 +66,16 @@ function WorkerProvider({ children }) {
           localStorage.setItem('gigshield_worker', JSON.stringify(payload.worker));
           setWorkerState(payload.worker);
           warmServices();
+          primeWorkerReads();
         } else {
           clearWorkerAuth();
+          clearWorkerSnapshots();
           setWorkerState(null);
         }
       })
       .catch(() => {
         clearWorkerAuth();
+        clearWorkerSnapshots();
         setWorkerState(null);
       })
       .finally(() => {

@@ -3,6 +3,7 @@ import { ArrowRight, CheckCircle2, KeyRound, ShieldCheck } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useWorker } from '../App';
 import { loginWorker, persistWorkerAuth, warmServices } from '../utils/api';
+import { primeWorkerReads } from '../utils/workerDataPrefetch';
 
 export default function SignIn() {
   const navigate = useNavigate();
@@ -36,6 +37,7 @@ export default function SignIn() {
       });
       persistWorkerAuth(response);
       warmServices();
+      primeWorkerReads();
       setWorker(response.worker);
       navigate(response.worker?.onboardingCompleted ? '/dashboard' : '/onboarding', { replace: true });
     } catch (signInError) {

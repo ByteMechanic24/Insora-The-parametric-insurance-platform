@@ -4,6 +4,7 @@ import useDeepLink from '../hooks/useDeepLink';
 import useLocation from '../hooks/useLocation';
 import { compressImageFile } from '../utils/imageCompression';
 import { generateDemoOrder, submitClaim } from '../utils/api';
+import { getCachedClaimsSnapshot, updateClaimsSnapshot } from '../utils/workerDataPrefetch';
 import { formatDecision, formatDisruption, formatPlatform, formatRupees } from '../utils/formatting';
 
 const DISRUPTION_OPTIONS = [
@@ -105,6 +106,8 @@ export default function ClaimSubmit() {
 
       localStorage.setItem('last_order_id', response.orderId || normalizedOrderId);
       localStorage.setItem('last_platform', platform);
+      const existingClaims = getCachedClaimsSnapshot() || [];
+      updateClaimsSnapshot([response, ...existingClaims.filter((claim) => claim._id !== response._id)]);
       setResult(response);
     } catch (submissionError) {
       setError(submissionError.message || 'Unable to submit claim.');

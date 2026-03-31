@@ -3,6 +3,7 @@ import { ArrowRight, Mail, Phone, ShieldCheck } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useWorker } from '../App';
 import { persistWorkerAuth, signUpWorker, warmServices } from '../utils/api';
+import { primeWorkerReads } from '../utils/workerDataPrefetch';
 
 export default function SignUp() {
   const navigate = useNavigate();
@@ -49,6 +50,7 @@ export default function SignUp() {
 
       persistWorkerAuth(response);
       warmServices();
+      primeWorkerReads();
       setWorker(response.worker);
       navigate('/onboarding', { replace: true });
     } catch (signUpError) {

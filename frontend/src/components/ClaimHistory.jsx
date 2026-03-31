@@ -1,6 +1,7 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { ChevronDown, SlidersHorizontal } from 'lucide-react';
 import { getClaims } from '../utils/api';
+import { getCachedClaimsSnapshot, updateClaimsSnapshot } from '../utils/workerDataPrefetch';
 import {
   formatDate,
   formatDecision,
@@ -12,9 +13,9 @@ import {
 const FILTERS = ['ALL', 'APPROVED', 'PENDING', 'REJECTED'];
 
 export default function ClaimHistory() {
-  const [claims, setClaims] = useState([]);
+  const [claims, setClaims] = useState(() => getCachedClaimsSnapshot() || []);
   const [filter, setFilter] = useState('ALL');
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(() => !getCachedClaimsSnapshot());
   const [expandedClaim, setExpandedClaim] = useState(null);
 
   useEffect(() => {
@@ -22,6 +23,7 @@ export default function ClaimHistory() {
       try {
         const response = await getClaims();
         setClaims(response);
+        updateClaimsSnapshot(response);
       } finally {
         setLoading(false);
       }
@@ -45,14 +47,6 @@ export default function ClaimHistory() {
 
     return claims.filter((claim) => ['SOFT_HOLD', 'MANUAL_REVIEW'].includes(claim.decision));
   }, [claims, filter]);
-
-  if (loading) {
-    return (
-      <div className="loading-state">
-        <div className="spinner" />
-      </div>
-    );
-  }
 
   return (
     <div className="page-stack">
@@ -81,7 +75,20 @@ export default function ClaimHistory() {
         </div>
       </section>
 
-      {filteredClaims.length === 0 ? (
+      {loading && filteredClaims.length === 0 ? (
+        <div className="history-grid">
+          {[1, 2, 3].map((placeholder) => (
+            <div key={placeholder} className="history-item">
+              <div className="history-item__row">
+                <div>
+                  <h3 style={{ margin: '12px 0 6px', fontSize: '1.2rem' }}>Loading claim history...</h3>
+                  <p className="helper-copy">Pulling the latest claim cards and scores.</p>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      ) : filteredClaims.length === 0 ? (
         <div className="empty-state">No claims match this filter yet.</div>
       ) : (
         <div className="history-grid">

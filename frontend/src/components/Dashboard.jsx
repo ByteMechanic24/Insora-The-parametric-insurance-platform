@@ -5,6 +5,12 @@ import { useWorker } from '../App';
 import PolicyCard from './PolicyCard';
 import { getClaims, getCurrentPolicy } from '../utils/api';
 import {
+  getCachedClaimsSnapshot,
+  getCachedPolicySnapshot,
+  updateClaimsSnapshot,
+  updatePolicySnapshot,
+} from '../utils/workerDataPrefetch';
+import {
   formatDate,
   formatDecision,
   formatDisruption,
@@ -15,14 +21,21 @@ import {
 export default function Dashboard() {
   const navigate = useNavigate();
   const { worker } = useWorker();
-  const [policy, setPolicy] = useState(null);
-  const [claims, setClaims] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [policy, setPolicy] = useState(() => getCachedPolicySnapshot());
+  const [claims, setClaims] = useState(() => getCachedClaimsSnapshot() || []);
+  const [policyLoading, setPolicyLoading] = useState(() => !getCachedPolicySnapshot());
+  const [claimsLoading, setClaimsLoading] = useState(() => !getCachedClaimsSnapshot());
   const [refreshing, setRefreshing] = useState(false);
 
   const fetchData = useCallback(async ({ silent = false } = {}) => {
     if (!silent) {
       setRefreshing(true);
+      if (!policy) {
+        setPolicyLoading(true);
+      }
+      if (claims.length === 0) {
+        setClaimsLoading(true);
+      }
     }
 
     try {
@@ -32,11 +45,14 @@ export default function Dashboard() {
       ]);
       setPolicy(policyResult);
       setClaims(claimsResult);
+      updatePolicySnapshot(policyResult);
+      updateClaimsSnapshot(claimsResult);
     } finally {
-      setLoading(false);
+      setPolicyLoading(false);
+      setClaimsLoading(false);
       setRefreshing(false);
     }
-  }, []);
+  }, [claims.length, policy]);
 
   useEffect(() => {
     fetchData();
@@ -56,14 +72,6 @@ export default function Dashboard() {
     ['SOFT_HOLD', 'MANUAL_REVIEW'].includes(claim.decision)
   ).length;
   const recentClaims = claims.slice(0, 4);
-
-  if (loading) {
-    return (
-      <div className="loading-state">
-        <div className="spinner" />
-      </div>
-    );
-  }
 
   return (
     <div className="page-stack">
@@ -121,12 +129,12 @@ export default function Dashboard() {
       <div className="stats-grid">
         <div className="metric-card">
           <p className="metric-card__label">Claims this month</p>
-          <div className="metric-card__value">{claims.length}</div>
+          <div className="metric-card__value">{claimsLoading && claims.length === 0 ? '...' : claims.length}</div>
           <p className="metric-card__caption">Fresh submissions tied to your worker account.</p>
         </div>
         <div className="metric-card">
           <p className="metric-card__label">Needs attention</p>
-          <div className="metric-card__value">{reviewQueue}</div>
+          <div className="metric-card__value">{claimsLoading && claims.length === 0 ? '...' : reviewQueue}</div>
           <p className="metric-card__caption">Claims still in auto recheck or manual review.</p>
         </div>
         <div className="metric-card">
@@ -136,7 +144,19 @@ export default function Dashboard() {
         </div>
       </div>
 
-      {policy ? <PolicyCard policy={policy} /> : null}
+      {policyLoading ? (
+        <section className="panel-card">
+          <div className="section-heading">
+            <div>
+              <p className="eyebrow">Active policy</p>
+              <h3 className="page-title" style={{ fontSize: '1.9rem' }}>
+                Loading your current coverage...
+              </h3>
+              <p className="card-copy">We are pulling the latest policy window and premium details.</p>
+            </div>
+          </div>
+        </section>
+      ) : policy ? <PolicyCard policy={policy} /> : null}
 
       <section className="panel-card">
         <div className="section-heading">
@@ -159,7 +179,18 @@ export default function Dashboard() {
           </div>
         </div>
 
-        {recentClaims.length === 0 ? (
+        {claimsLoading && recentClaims.length === 0 ? (
+          <div style={{ marginTop: 20, display: 'grid', gap: 16 }}>
+            {[1, 2, 3].map((placeholder) => (
+              <div key={placeholder} className="timeline-card">
+                <div className="history-item__row">
+                  <strong>Loading recent claim...</strong>
+                  <span className="helper-copy">Fetching latest activity</span>
+                </div>
+              </div>
+            ))}
+          </div>
+        ) : recentClaims.length === 0 ? (
           <div className="empty-state" style={{ marginTop: 20 }}>
             Your claim timeline is empty. Submit a disruption claim when an order gets blocked by real-world conditions.
           </div>
