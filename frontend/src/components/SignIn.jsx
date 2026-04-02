@@ -1,9 +1,38 @@
 import React, { useEffect, useState } from 'react';
-import { ArrowRight, CheckCircle2, KeyRound, ShieldCheck } from 'lucide-react';
+import {
+  ArrowRight,
+  CheckCircle2,
+  KeyRound,
+  ShieldCheck,
+  Mail,
+  Lock,
+  Bike,
+  BadgeIndianRupee,
+  Zap,
+} from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useWorker } from '../App';
 import { loginWorker, persistWorkerAuth, warmServices } from '../utils/api';
 import { primeWorkerReads } from '../utils/workerDataPrefetch';
+import '../styles/auth.css';
+
+const trustPoints = [
+  {
+    icon: CheckCircle2,
+    title: 'Dashboard after validation',
+    copy: 'Fully onboarded workers go straight into their overview workspace.',
+  },
+  {
+    icon: ShieldCheck,
+    title: 'Secure account check',
+    copy: 'Your sign-in is validated against your encrypted worker record.',
+  },
+  {
+    icon: KeyRound,
+    title: 'Email + password access',
+    copy: 'Simple, fast sign-in path — no external identity providers needed.',
+  },
+];
 
 export default function SignIn() {
   const navigate = useNavigate();
@@ -49,103 +78,134 @@ export default function SignIn() {
 
   return (
     <div className="page-stack">
-      <section className="sign-in-shell">
-        <div className="sign-in-grid">
-          <div className="sign-in-intro hero-card">
-            <div>
-              <p className="eyebrow" style={{ color: 'rgba(255,255,255,0.72)' }}>
-                Welcome back
-              </p>
-              <h2 className="page-title" style={{ color: 'white', maxWidth: 560 }}>
-                Sign in and continue with your worker account.
-              </h2>
-              <p className="hero-card__subtext" style={{ maxWidth: 520, marginTop: 14 }}>
-                Returning users use the email and password created during sign-up. If onboarding is not
-                finished yet, we’ll guide you there before the dashboard.
-              </p>
-            </div>
+      <div className="auth-grid">
 
-            <div className="sign-in-points">
-              <div className="sign-in-point">
-                <CheckCircle2 size={18} />
-                <div>
-                  <strong>Dashboard after validation</strong>
-                  <p>Fully onboarded workers go straight into their own overview workspace.</p>
-                </div>
-              </div>
-              <div className="sign-in-point">
-                <ShieldCheck size={18} />
-                <div>
-                  <strong>Atlas-backed account check</strong>
-                  <p>Your sign-in is validated against the stored worker record in MongoDB Atlas.</p>
-                </div>
-              </div>
-              <div className="sign-in-point">
-                <KeyRound size={18} />
-                <div>
-                  <strong>Email plus password</strong>
-                  <p>Simple sign-in path for returning workers without external identity providers.</p>
-                </div>
-              </div>
+        {/* ── LEFT: Intro panel ── */}
+        <div className="auth-intro">
+          <div>
+            <div className="auth-intro__badge">
+              <Bike size={13} />
+              Rider workspace
             </div>
+            <h2 className="auth-intro__title">
+              Welcome back,<br /><span>let's get you riding</span>
+            </h2>
+            <p className="auth-intro__sub">
+              Returning riders sign in with the email and password from their GigShield account. Onboarding incomplete? We'll guide you there first.
+            </p>
           </div>
 
-          <section className="panel-card sign-in-card">
-            <div className="section-heading">
-              <div>
-                <p className="eyebrow">Worker sign in</p>
-                <h3 className="page-title" style={{ fontSize: '2.1rem' }}>
-                  Re-enter your workspace
-                </h3>
+          <div className="auth-perks">
+            {trustPoints.map(({ icon: Icon, title, copy }) => (
+              <div className="auth-perk" key={title}>
+                <div className="auth-perk__icon">
+                  <Icon size={18} />
+                </div>
+                <div>
+                  <p className="auth-perk__title">{title}</p>
+                  <p className="auth-perk__copy">{copy}</p>
+                </div>
               </div>
+            ))}
+          </div>
+
+          <div className="auth-trust">
+            <span className="auth-trust__item">
+              <Zap size={13} />
+              Instant sign-in
+            </span>
+            <span className="auth-trust__item">
+              <ShieldCheck size={13} />
+              Encrypted session
+            </span>
+            <span className="auth-trust__item">
+              <BadgeIndianRupee size={13} />
+              UPI payouts ready
+            </span>
+          </div>
+        </div>
+
+        {/* ── RIGHT: Form card ── */}
+        <section className="auth-card">
+          <div className="auth-card__header">
+            <p className="eyebrow">Worker sign in</p>
+            <h3 className="auth-card__title">Re-enter your workspace</h3>
+            <p className="auth-card__sub">
+              Sign in to check your coverage status, track claims, and manage your weekly protection.
+            </p>
+          </div>
+
+          {error ? (
+            <div className="auth-error" role="alert">
+              <ShieldCheck size={16} style={{ color: '#c45b4e', flexShrink: 0 }} />
+              {error}
             </div>
+          ) : null}
 
-            {error ? <div className="alert alert--error sign-in-alert">{error}</div> : null}
-
-            <form className="sign-in-form" onSubmit={handleSubmit}>
-              <div className="field">
-                <label htmlFor="signin-email">Email</label>
+          <form className="auth-form" onSubmit={handleSubmit}>
+            <div className="auth-field">
+              <label htmlFor="signin-email">Email address</label>
+              <div className="auth-input-wrap">
+                <span className="auth-input-icon"><Mail size={16} /></span>
                 <input
                   id="signin-email"
+                  className="auth-input"
                   type="email"
                   placeholder="you@example.com"
                   value={email}
                   onChange={(event) => setEmail(event.target.value)}
                 />
               </div>
+            </div>
 
-              <div className="field">
-                <label htmlFor="signin-password">Password</label>
+            <div className="auth-field">
+              <label htmlFor="signin-password">Password</label>
+              <div className="auth-input-wrap">
+                <span className="auth-input-icon"><Lock size={16} /></span>
                 <input
                   id="signin-password"
+                  className="auth-input"
                   type="password"
                   placeholder="Enter your password"
                   value={password}
                   onChange={(event) => setPassword(event.target.value)}
                 />
               </div>
+            </div>
 
-              <div className="sign-in-note">
-                <span className="tag sign-in-note__tag">
-                  <KeyRound size={14} />
-                  Returning user access
-                </span>
-                <p>If the account doesn’t exist yet, you’ll need to sign up first.</p>
-              </div>
+            <div className="signin-info">
+              <span className="signin-info__tag">
+                <KeyRound size={12} />
+                Returning user access
+              </span>
+              <p>If the account doesn't exist yet, you'll need to sign up first.</p>
+            </div>
 
-              <div className="inline-actions sign-in-actions">
-                <button type="submit" className="button button--primary" disabled={loading}>
-                  {loading ? 'Signing in...' : 'Sign in'}
-                </button>
-                <button type="button" className="button button--ghost" onClick={() => navigate('/get-started')}>
-                  Create new coverage
-                  <ArrowRight size={16} />
-                </button>
-              </div>
-            </form>
-          </section>
-        </div>
-      </section>
+            <div className="auth-actions">
+              <button type="submit" className="button button--primary" disabled={loading}>
+                {loading ? 'Signing in…' : 'Sign in'}
+                {!loading && <ArrowRight size={16} />}
+              </button>
+
+              <div className="auth-divider">or</div>
+
+              <button
+                type="button"
+                className="button button--ghost"
+                onClick={() => navigate('/get-started')}
+              >
+                Create new coverage
+                <ArrowRight size={16} />
+              </button>
+
+              <p className="auth-note">
+                New rider? Sign up — it takes under 3 minutes.
+              </p>
+            </div>
+          </form>
+        </section>
+
+      </div>
     </div>
   );
 }
