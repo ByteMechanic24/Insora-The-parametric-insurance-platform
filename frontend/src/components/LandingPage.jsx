@@ -29,7 +29,7 @@ export default function LandingPage() {
             A calm, modern safety net for orders blocked by rain, heat, air quality, strikes, and road closures.
           </h2>
           <p className="landing-hero__text">
-            GigShield is designed for riders who need a clear screen, a short flow, and trustworthy claim status on a phone. No cluttered dashboard before you even get started.
+            Insora is designed for riders who need a clear screen, a short flow, and trustworthy claim status on a phone. No cluttered dashboard before you even get started.
           </p>
 
           <div className="landing-hero__actions">

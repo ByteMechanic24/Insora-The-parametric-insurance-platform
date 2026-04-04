@@ -123,7 +123,7 @@ export default function Onboarding() {
               Protect each working week with faster claims and cleaner proof capture.
             </h2>
             <p className="hero-card__subtext" style={{ maxWidth: 560, marginTop: 14 }}>
-              GigShield gives riders a calm place to enroll, prove a disruption, and understand what
+              Insora gives riders a calm place to enroll, prove a disruption, and understand what
               happens next. The experience stays mobile-first without looking like a temporary demo.
             </p>
             <div className="pill-row" style={{ marginTop: 18 }}>
@@ -320,7 +320,7 @@ export default function Onboarding() {
             </div>
             <div className="field field--full">
               <div className="alert alert--info">
-                GigShield only covers verified disruption-related income loss. Health incidents, vehicle damage,
+                Insora only covers verified disruption-related income loss. Health incidents, vehicle damage,
                 and generic accidents are outside this policy.
               </div>
             </div>

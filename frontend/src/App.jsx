@@ -129,7 +129,7 @@ function PublicOnlyRoute({ children }) {
 function LandingRoute() {
   const { authReady } = useWorker();
   if (!authReady) {
-    return <div className="panel-card">Loading GigShield...</div>;
+    return <div className="panel-card">Loading Insora...</div>;
   }
   return <LandingPage />;
 }
@@ -186,7 +186,7 @@ function AppShell() {
           </div>
           <div>
             <p className="eyebrow">Parametric income protection</p>
-            <h1>GigShield</h1>
+            <h1>Insora</h1>
           </div>
         </div>
 
@@ -333,7 +333,7 @@ function AppShell() {
 
 export default function App() {
   useEffect(() => {
-    document.title = 'GigShield';
+    document.title = 'Insora';
   }, []);
 
   return (

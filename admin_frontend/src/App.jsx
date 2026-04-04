@@ -82,7 +82,7 @@ export default function App() {
                 Org-side control plane
               </p>
               <h1 className="page-title" style={{ color: 'white', maxWidth: 560 }}>
-                GigShield Admin Console
+                Insora Admin Console
               </h1>
               <p className="landing-hero__text">
                 This environment is reserved for insurer and operations users only. Worker accounts do not have access here.
@@ -141,7 +141,7 @@ export default function App() {
           </div>
           <div>
             <p className="eyebrow">Private admin environment</p>
-            <h1>GigShield Admin</h1>
+            <h1>Insora Admin</h1>
           </div>
         </div>
         <div className="topbar__meta">

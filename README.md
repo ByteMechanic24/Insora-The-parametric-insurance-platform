@@ -1,4 +1,4 @@
-# GigShield 🛡️
+# Insora 🛡️
 
 **AI-powered parametric income insurance for food delivery workers on Zomato and Swiggy**
 
