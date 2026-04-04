@@ -295,9 +295,9 @@
 .lp-steps__grid::before {
   content: '';
   position: absolute;
-  top: 28px;
-  left: calc(12.5% + 14px);
-  right: calc(12.5% + 14px);
+  top: 43px;
+  left: 40px;
+  width: 75%;
   height: 2px;
   background: linear-gradient(90deg, #0e7c86, #ff8e3c);
   z-index: 0;
@@ -329,7 +329,7 @@
   font-size: 0.7rem;
   font-weight: 700;
   letter-spacing: 0.08em;
-  color: rgba(255, 255, 255, 0.75);
+  color: #a0aec0;
   margin-bottom: 4px;
 }
 

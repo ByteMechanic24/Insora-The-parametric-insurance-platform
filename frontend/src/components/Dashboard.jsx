@@ -101,8 +101,8 @@ export default function Dashboard() {
             </div>
           </div>
 
-          <div className="app-hero__actions">
-            <div className="app-metric" style={{ background: 'transparent', padding: '16px' }}>
+          <div className="app-hero__actions" style={{ display: 'grid', gap: '12px' }}>
+            <div className="app-metric" style={{ background: '#ffffff', padding: '24px' }}>
               <p className="app-metric__label">
                 Total approved payout
               </p>

@@ -182,13 +182,15 @@ function AppShell() {
               {sidebarOpen ? <X size={18} /> : <Menu size={18} />}
             </button>
           ) : null}
-          <div className="brand-mark">
-            <Sparkles size={18} strokeWidth={2.2} />
-          </div>
-          <div>
-            <p className="eyebrow">Parametric income protection</p>
-            <h1>Insora</h1>
-          </div>
+          <NavLink to="/" style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
+            <div className="brand-mark">
+              <Sparkles size={18} strokeWidth={2.2} />
+            </div>
+            <div>
+              <p className="eyebrow">Parametric income protection</p>
+              <h1>Insora</h1>
+            </div>
+          </NavLink>
         </div>
 
         <div className="topbar__meta">
@@ -227,10 +229,6 @@ function AppShell() {
               <a href="/get-started" className="button button--secondary">
                 Get protected
               </a>
-              <div className="presence-chip presence-chip--accent topbar__status">
-                <span className="presence-chip__dot" />
-                <span>Live demo mode</span>
-              </div>
             </>
           )}
         </div>
