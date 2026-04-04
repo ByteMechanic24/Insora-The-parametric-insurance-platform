@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { useWorker } from '../App';
 import { registerWorker } from '../utils/api';
 import { formatTier } from '../utils/formatting';
+import '../styles/app.css';
 
 const CITIES = {
   Mumbai: ['Andheri', 'Bandra', 'Powai', 'South Mumbai', 'Borivali'],
@@ -113,73 +114,7 @@ export default function Onboarding() {
 
   return (
     <div className="page-stack">
-      <section className="hero-card">
-        <div className="hero-card__grid">
-          <div>
-            <p className="eyebrow" style={{ color: 'rgba(255,255,255,0.72)' }}>
-              Built for India’s delivery workforce
-            </p>
-            <h2 className="page-title" style={{ color: 'white', maxWidth: 620 }}>
-              Protect each working week with faster claims and cleaner proof capture.
-            </h2>
-            <p className="hero-card__subtext" style={{ maxWidth: 560, marginTop: 14 }}>
-              Insora gives riders a calm place to enroll, prove a disruption, and understand what
-              happens next. The experience stays mobile-first without looking like a temporary demo.
-            </p>
-            <div className="pill-row" style={{ marginTop: 18 }}>
-              <span className="tag">
-                <Shield size={14} />
-                Weekly coverage
-              </span>
-              <span className="tag">
-                <Wallet size={14} />
-                UPI payout setup
-              </span>
-              <span className="tag">
-                <Sparkles size={14} />
-                Faster evidence capture
-              </span>
-            </div>
-          </div>
-
-          <div className="panel-card" style={{ background: 'rgba(255,255,255,0.12)', color: 'white' }}>
-            <p className="eyebrow" style={{ color: 'rgba(255,255,255,0.72)' }}>
-              Why riders use it
-            </p>
-            <div className="stats-grid">
-              <div className="metric-card" style={{ background: 'rgba(255,255,255,0.08)', color: 'white' }}>
-                <p className="metric-card__label" style={{ color: 'rgba(255,255,255,0.72)' }}>
-                  Setup time
-                </p>
-                <div className="metric-card__value">3 min</div>
-                <p className="metric-card__caption" style={{ color: 'rgba(255,255,255,0.72)' }}>
-                  Guided onboarding
-                </p>
-              </div>
-              <div className="metric-card" style={{ background: 'rgba(255,255,255,0.08)', color: 'white' }}>
-                <p className="metric-card__label" style={{ color: 'rgba(255,255,255,0.72)' }}>
-                  Claim inputs
-                </p>
-                <div className="metric-card__value">4</div>
-                <p className="metric-card__caption" style={{ color: 'rgba(255,255,255,0.72)' }}>
-                  Order, platform, disruption, GPS
-                </p>
-              </div>
-              <div className="metric-card" style={{ background: 'rgba(255,255,255,0.08)', color: 'white' }}>
-                <p className="metric-card__label" style={{ color: 'rgba(255,255,255,0.72)' }}>
-                  Designed for
-                </p>
-                <div className="metric-card__value">7 cities</div>
-                <p className="metric-card__caption" style={{ color: 'rgba(255,255,255,0.72)' }}>
-                  With zone-based pricing
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section className="panel-card">
+      <section className="app-panel">
         <div className="section-heading">
           <div>
             <p className="eyebrow">Onboarding</p>
@@ -234,22 +169,22 @@ export default function Onboarding() {
 
             <div className="field">
               <label>Estimated weekly premium</label>
-              <div className="metric-card">
-                <p className="metric-card__label">{plan.label}</p>
-                <div className="metric-card__value">₹{estimatedPremium}</div>
-                <p className="metric-card__caption">Adjusted for {city} rider density and disruption risk.</p>
+              <div className="app-metric">
+                <p className="app-metric__label">{plan.label}</p>
+                <div className="app-metric__value">₹{estimatedPremium}</div>
+                <p className="app-metric__caption">Adjusted for {city} rider density and disruption risk.</p>
               </div>
             </div>
 
             <div className="field field--full">
               <div className="fieldset">
                 <span className="fieldset__label">Active delivery zones</span>
-                <div className="zone-grid">
+                <div className="ob-zone-grid" style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
                   {(CITIES[city] || []).map((zone) => (
                     <button
                       key={zone}
                       type="button"
-                      className={`zone-pill${operatingZones.includes(zone) ? ' zone-pill--active' : ''}`}
+                      className={`app-zone-pill${operatingZones.includes(zone) ? ' app-zone-pill--active' : ''}`}
                       onClick={() => toggleZone(zone)}
                     >
                       {zone}
@@ -272,7 +207,7 @@ export default function Onboarding() {
                 <button
                   key={planKey}
                   type="button"
-                  className={`selection-card${active ? ' selection-card--active' : ''}`}
+                  className={`app-selection-card${active ? ' app-selection-card--active' : ''}`}
                   onClick={() => setTier(planKey)}
                 >
                   <div className="section-heading">
@@ -298,25 +233,25 @@ export default function Onboarding() {
         ) : null}
 
         {step === 3 ? (
-          <div className="stats-grid" style={{ marginTop: 24 }}>
-            <div className="metric-card">
-              <p className="metric-card__label">Weekly plan</p>
-              <div className="metric-card__value">{plan.label}</div>
-              <p className="metric-card__caption">Estimated premium ₹{estimatedPremium}</p>
+          <div className="app-stats-grid" style={{ marginTop: 24 }}>
+            <div className="app-metric">
+              <p className="app-metric__label">Weekly plan</p>
+              <div className="app-metric__value">{plan.label}</div>
+              <p className="app-metric__caption">Estimated premium ₹{estimatedPremium}</p>
             </div>
-            <div className="metric-card">
-              <p className="metric-card__label">Payout destination</p>
-              <div className="metric-card__value" style={{ fontSize: '1.35rem' }}>
+            <div className="app-metric">
+              <p className="app-metric__label">Payout destination</p>
+              <div className="app-metric__value" style={{ fontSize: '1.35rem' }}>
                 {upiHandle}
               </div>
-              <p className="metric-card__caption">Linked to your worker account</p>
+              <p className="app-metric__caption">Linked to your worker account</p>
             </div>
-            <div className="metric-card">
-              <p className="metric-card__label">Delivery zones</p>
-              <div className="metric-card__value" style={{ fontSize: '1.35rem' }}>
+            <div className="app-metric">
+              <p className="app-metric__label">Delivery zones</p>
+              <div className="app-metric__value" style={{ fontSize: '1.35rem' }}>
                 {operatingZones.length}
               </div>
-              <p className="metric-card__caption">{operatingZones.join(', ')}</p>
+              <p className="app-metric__caption">{operatingZones.join(', ')}</p>
             </div>
             <div className="field field--full">
               <div className="alert alert--info">
