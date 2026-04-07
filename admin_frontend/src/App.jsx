@@ -3,6 +3,7 @@ import { LockKeyhole, LogOut, ShieldCheck } from 'lucide-react';
 import AdminDashboard from './components/AdminDashboard';
 import { loginAdmin, removeAdminKey } from './utils/api';
 import './index.css';
+import './styles/premium-ui.css';
 
 const STORAGE_KEY = 'gigshield_admin_key';
 
@@ -76,33 +77,31 @@ export default function App() {
       <div className="app-shell">
         <div className="app-shell__backdrop" />
         <main className="page-frame page-frame--guest" style={{ maxWidth: 680 }}>
-          <section className="landing-hero" style={{ gridTemplateColumns: '1fr', minHeight: 'auto' }}>
-            <div className="landing-hero__copy">
-              <p className="eyebrow" style={{ color: 'rgba(255,255,255,0.72)' }}>
-                Org-side control plane
-              </p>
-              <h1 className="page-title" style={{ color: 'white', maxWidth: 560 }}>
-                Insora Admin Console
-              </h1>
-              <p className="landing-hero__text">
-                This environment is reserved for insurer and operations users only. Worker accounts do not have access here.
-              </p>
-            </div>
+          <section className="p-card p-card--hero" style={{ borderBottomLeftRadius: 0, borderBottomRightRadius: 0 }}>
+            <p className="p-eyebrow">
+              <span className="lp-eyebrow__dot" aria-hidden="true" style={{ background: 'var(--brand)', width: 6, height: 6, borderRadius: '50%' }} />
+              Org-side control plane
+            </p>
+            <h1 className="p-title p-title--hero">
+              Insora Admin Console
+            </h1>
+            <p className="p-subtext">
+              This environment is reserved for insurer and operations users only. Worker accounts do not have access here.
+            </p>
           </section>
 
-          <section className="panel-card" style={{ marginTop: 20 }}>
-            <div className="section-heading">
+          <section className="p-card" style={{ marginTop: 20, borderTopLeftRadius: 0, borderTopRightRadius: 0 }}>
+            <div className="p-section-heading">
               <div>
-                <p className="eyebrow">Admin sign-in</p>
-                <h2 className="page-title" style={{ fontSize: '2rem' }}>
+                <h2 className="p-title p-title--section">
                   Enter the access key
                 </h2>
               </div>
             </div>
 
-            {error ? <div className="alert alert--error" style={{ marginTop: 18 }}>{error}</div> : null}
+            {error ? <div className="p-alert p-alert--error" style={{ marginBottom: 18 }}>{error}</div> : null}
 
-            <form onSubmit={handleLogin} className="form-grid" style={{ marginTop: 20 }}>
+            <form onSubmit={handleLogin} className="form-grid">
               <div className="field field--full">
                 <label htmlFor="admin-key">Admin access key</label>
                 <div className="input-prefix">
@@ -118,8 +117,8 @@ export default function App() {
                   />
                 </div>
               </div>
-              <div className="inline-actions" style={{ gridTemplateColumns: '1fr' }}>
-                <button type="submit" className="button button--secondary" disabled={!inputKey.trim()}>
+              <div className="p-grid-actions" style={{ marginTop: 8 }}>
+                <button type="submit" className="button button--secondary" disabled={!inputKey.trim()} style={{ width: '100%' }}>
                   <ShieldCheck size={16} />
                   Open admin console
                 </button>
@@ -141,7 +140,7 @@ export default function App() {
           </div>
           <div>
             <p className="eyebrow">Private admin environment</p>
-            <h1>Insora Admin</h1>
+            <h1 className="p-title" style={{ fontSize: '1.4rem' }}>Insora Admin</h1>
           </div>
         </div>
         <div className="topbar__meta">

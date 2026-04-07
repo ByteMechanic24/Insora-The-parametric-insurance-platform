@@ -6,6 +6,8 @@ import { compressImageFile } from '../utils/imageCompression';
 import { generateDemoOrder, submitClaim } from '../utils/api';
 import { getCachedClaimsSnapshot, updateClaimsSnapshot } from '../utils/workerDataPrefetch';
 import { formatDecision, formatDisruption, formatPlatform, formatRupees } from '../utils/formatting';
+import '../styles/app.css';
+import '../styles/auth.css';
 
 const DISRUPTION_OPTIONS = [
   { value: 'flooding', label: 'Flooding', description: 'Roads waterlogged or unsafe to continue.' },
@@ -183,14 +185,14 @@ export default function ClaimSubmit() {
 
     return (
       <div className="page-stack">
-        <section className="result-card">
-          <div className="result-card__headline">
+        <section className="app-panel">
+          <div className="result-card__headline" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
             <div>
               <p className="eyebrow">Claim created</p>
-              <h2 className="page-title" style={{ fontSize: '2.2rem' }}>
+              <h2 className="app-hero__title" style={{ fontSize: '2.2rem', margin: '4px 0 12px' }}>
                 {decision.label}
               </h2>
-              <p className="card-copy">
+              <p className="app-hero__sub">
                 Order {result.orderId} was submitted successfully and is now in the decision pipeline.
               </p>
             </div>
@@ -200,18 +202,18 @@ export default function ClaimSubmit() {
             </div>
           </div>
 
-          <div className="result-grid" style={{ marginTop: 22 }}>
-            <div className="metric-card">
-              <p className="metric-card__label">Estimated payout</p>
-              <div className="metric-card__value">{formatRupees(result.payout?.total || 0)}</div>
-              <p className="metric-card__caption">Calculated from the current policy rules.</p>
+          <div className="app-stats-grid" style={{ marginTop: 22 }}>
+            <div className="app-metric">
+              <p className="app-metric__label">Estimated payout</p>
+              <div className="app-metric__value">{formatRupees(result.payout?.total || 0)}</div>
+              <p className="app-metric__caption">Calculated from the current policy rules.</p>
             </div>
-            <div className="metric-card">
-              <p className="metric-card__label">Composite score</p>
-              <div className="metric-card__value">
+            <div className="app-metric">
+              <p className="app-metric__label">Composite score</p>
+              <div className="app-metric__value">
                 {typeof result.compositeScore === 'number' ? result.compositeScore.toFixed(2) : 'N/A'}
               </div>
-              <p className="metric-card__caption">Higher scores lead to faster auto decisions.</p>
+              <p className="app-metric__caption">Higher scores lead to faster auto decisions.</p>
             </div>
           </div>
 
@@ -237,11 +239,11 @@ export default function ClaimSubmit() {
 
   return (
     <div className="page-stack">
-      <section className="panel-card">
+      <section className="app-panel">
         <div className="section-heading">
           <div>
             <p className="eyebrow">New claim</p>
-            <h2 className="page-title" style={{ fontSize: '2.2rem' }}>
+            <h2 className="app-hero__title" style={{ fontSize: '2.2rem' }}>
               Report a blocked order
             </h2>
             <p className="card-copy">Attach the order, platform, disruption type, and live location in one flow.</p>
@@ -251,15 +253,18 @@ export default function ClaimSubmit() {
         {error ? <div className="alert alert--error" style={{ marginTop: 20 }}>{error}</div> : null}
 
         <div className="form-grid" style={{ marginTop: 24 }}>
-          <div className="field">
+          <div className="auth-field">
             <label htmlFor="order-id">Order ID</label>
-            <input
-              id="order-id"
-              type="text"
-              value={orderId}
-              onChange={(event) => setOrderId(event.target.value.toUpperCase())}
-              placeholder="ZOM-20260403-000001"
-            />
+            <div className="auth-input-wrap">
+              <input
+                id="order-id"
+                className="auth-input"
+                type="text"
+                value={orderId}
+                onChange={(event) => setOrderId(event.target.value.toUpperCase())}
+                placeholder="ZOM-20260403-000001"
+              />
+            </div>
             <span className="helper-copy">
               {isAutoFilled
                 ? 'Pre-filled from your last valid order context.'
@@ -267,7 +272,7 @@ export default function ClaimSubmit() {
             </span>
           </div>
 
-          <div className="field">
+          <div className="auth-field">
             <label>Platform</label>
             <div className="selection-grid selection-grid--two">
               {['zomato', 'swiggy'].map((platformKey) => (
@@ -290,7 +295,7 @@ export default function ClaimSubmit() {
                 <button
                   key={option.value}
                   type="button"
-                  className={`selection-card${disruptionType === option.value ? ' selection-card--active' : ''}`}
+                  className={`app-selection-card${disruptionType === option.value ? ' app-selection-card--active' : ''}`}
                   onClick={() => setDisruptionType(option.value)}
                 >
                   <strong>{option.label}</strong>
@@ -342,46 +347,46 @@ export default function ClaimSubmit() {
           </div>
         </div>
 
-        <div className="stats-grid" style={{ marginTop: 24 }}>
-          <div className="metric-card">
-            <p className="metric-card__label">
+        <div className="app-stats-grid" style={{ marginTop: 24 }}>
+          <div className="app-metric">
+            <p className="app-metric__label">
               <Crosshair size={14} style={{ marginRight: 6, verticalAlign: 'text-bottom' }} />
-              GPS evidence
+              Your Location  
             </p>
-            <div className="metric-card__value" style={{ fontSize: '1.1rem' }}>
+            <div className="app-metric__value" style={{ fontSize: '1.1rem' }}>
               {gpsCoords ? `${gpsCoords.lat.toFixed(4)}, ${gpsCoords.lng.toFixed(4)}` : 'Waiting'}
             </div>
-            <p className="metric-card__caption">{locationSummary}</p>
+            <p className="app-metric__caption">{locationSummary}</p>
           </div>
-          <div className="metric-card">
-            <p className="metric-card__label">
+          <div className="app-metric">
+            <p className="app-metric__label">
               <MapPinned size={14} style={{ marginRight: 6, verticalAlign: 'text-bottom' }} />
               Network fallback
             </p>
-            <div className="metric-card__value" style={{ fontSize: '1.1rem' }}>
+            <div className="app-metric__value" style={{ fontSize: '1.1rem' }}>
               {networkCoords ? `${networkCoords.lat.toFixed(4)}, ${networkCoords.lng.toFixed(4)}` : 'Unavailable'}
             </div>
-            <p className="metric-card__caption">Used if a high-accuracy GPS lock is slow or blocked.</p>
+            <p className="app-metric__caption">Used if a high-accuracy GPS lock is slow or blocked.</p>
           </div>
-          <div className="metric-card">
-            <p className="metric-card__label">
+          <div className="app-metric">
+            <p className="app-metric__label">
               <Radar size={14} style={{ marginRight: 6, verticalAlign: 'text-bottom' }} />
               Claim preview
             </p>
-            <div className="metric-card__value" style={{ fontSize: '1.1rem' }}>
+            <div className="app-metric__value" style={{ fontSize: '1.1rem' }}>
               {formatPlatform(platform)} · {formatDisruption(disruptionType)}
             </div>
-            <p className="metric-card__caption">Order {orderId || 'not entered yet'} · {photos.length} photos attached</p>
+            <p className="app-metric__caption">Order {orderId || 'not entered yet'} · {photos.length} photos attached</p>
           </div>
-          <div className="metric-card">
-            <p className="metric-card__label">
+          <div className="app-metric">
+            <p className="app-metric__label">
               <Camera size={14} style={{ marginRight: 6, verticalAlign: 'text-bottom' }} />
               Photo evidence
             </p>
-            <div className="metric-card__value" style={{ fontSize: '1.1rem' }}>
+            <div className="app-metric__value" style={{ fontSize: '1.1rem' }}>
               {photos.length ? `${photos.length} ready` : 'Optional'}
             </div>
-            <p className="metric-card__caption">Photos are reviewed by humans if the claim enters the decision pipeline.</p>
+            <p className="app-metric__caption">Photos are reviewed by humans if the claim enters the decision pipeline.</p>
           </div>
         </div>
 

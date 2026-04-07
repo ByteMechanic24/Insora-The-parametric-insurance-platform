@@ -9,6 +9,7 @@ import {
   formatPlatform,
   formatRupees,
 } from '../utils/formatting';
+import '../styles/app.css';
 
 const FILTERS = ['ALL', 'APPROVED', 'PENDING', 'REJECTED'];
 
@@ -50,11 +51,11 @@ export default function ClaimHistory() {
 
   return (
     <div className="page-stack">
-      <section className="panel-card">
+      <section className="app-panel">
         <div className="section-heading">
           <div>
             <p className="eyebrow">Claim history</p>
-            <h2 className="page-title" style={{ fontSize: '2.2rem' }}>
+            <h2 className="app-hero__title" style={{ fontSize: '2.2rem' }}>
               Review every submission
             </h2>
             <p className="card-copy">Filter by outcome and expand a claim to inspect the scoring breakdown.</p>
@@ -78,8 +79,8 @@ export default function ClaimHistory() {
       {loading && filteredClaims.length === 0 ? (
         <div className="history-grid">
           {[1, 2, 3].map((placeholder) => (
-            <div key={placeholder} className="history-item">
-              <div className="history-item__row">
+            <div key={placeholder} className="app-timeline-card">
+              <div className="app-timeline-row">
                 <div>
                   <h3 style={{ margin: '12px 0 6px', fontSize: '1.2rem' }}>Loading claim history...</h3>
                   <p className="helper-copy">Pulling the latest claim cards and scores.</p>
@@ -97,8 +98,8 @@ export default function ClaimHistory() {
             const isExpanded = expandedClaim === claim._id;
 
             return (
-              <div key={claim._id} className="history-item">
-                <div className="history-item__row">
+              <div key={claim._id} className="app-timeline-card">
+                <div className="app-timeline-row">
                   <div>
                     <div className="pill-row">
                       <span className={`platform-chip platform-chip--${claim.platform}`}>{formatPlatform(claim.platform)}</span>
@@ -127,10 +128,10 @@ export default function ClaimHistory() {
                 </div>
 
                 {isExpanded ? (
-                  <div className="history-item__detail">
-                    <div className="metric-card">
-                      <p className="metric-card__label">Composite score</p>
-                      <div className="metric-card__value">
+                  <div className="app-timeline-detail">
+                    <div className="app-metric" style={{ background: '#fafafa', border: 'none', boxShadow: 'none' }}>
+                      <p className="app-metric__label">Composite score</p>
+                      <div className="app-metric__value">
                         {typeof claim.compositeScore === 'number' ? claim.compositeScore.toFixed(2) : 'N/A'}
                       </div>
                       <div className="scorebar" style={{ marginTop: 12 }}>
@@ -146,7 +147,7 @@ export default function ClaimHistory() {
                     {claim.checkResults?.length ? (
                       claim.checkResults.map((result, index) => (
                         <div key={`${claim._id}-${index}`}>
-                          <div className="history-item__row">
+                          <div className="app-timeline-row" style={{ marginTop: 12 }}>
                             <strong>{result.checkName}</strong>
                             <span className="helper-copy">{Math.round((result.weight || 0) * 100)}% weight</span>
                           </div>

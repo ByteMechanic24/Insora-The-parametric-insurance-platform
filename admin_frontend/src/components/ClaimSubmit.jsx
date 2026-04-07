@@ -92,40 +92,40 @@ export default function ClaimSubmit() {
     const decision = formatDecision(result.decision);
 
     return (
-      <div className="page-stack">
-        <section className="result-card">
-          <div className="result-card__headline">
+      <div className="p-page-stack">
+        <section className="p-card">
+          <div className="p-section-heading">
             <div>
-              <p className="eyebrow">Claim created</p>
-              <h2 className="page-title" style={{ fontSize: '2.2rem' }}>
+              <p className="p-eyebrow">Claim created</p>
+              <h2 className="p-title p-title--section">
                 {decision.label}
               </h2>
-              <p className="card-copy">
+              <p className="p-subtext">
                 Order {result.orderId} was submitted successfully and is now in the decision pipeline.
               </p>
             </div>
-            <div className={`decision-chip decision-chip--${decision.tone}`}>
+            <div className={`p-tag p-tag--${decision.tone === 'review' ? 'warning' : decision.tone}`} style={{ padding: '8px 16px', fontSize: '0.85rem' }}>
               <CheckCircle2 size={16} />
               {decision.label}
             </div>
           </div>
 
-          <div className="result-grid" style={{ marginTop: 22 }}>
-            <div className="metric-card">
-              <p className="metric-card__label">Estimated payout</p>
-              <div className="metric-card__value">{formatRupees(result.payout?.total || 0)}</div>
-              <p className="metric-card__caption">Calculated from the current policy rules.</p>
+          <div className="p-grid-2" style={{ marginTop: 22 }}>
+            <div className="p-metric">
+              <p className="p-metric__label">Estimated payout</p>
+              <div className="p-metric__value" style={{ marginTop: 4 }}>{formatRupees(result.payout?.total || 0)}</div>
+              <p className="p-metric__caption">Calculated from the current policy rules.</p>
             </div>
-            <div className="metric-card">
-              <p className="metric-card__label">Composite score</p>
-              <div className="metric-card__value">
+            <div className="p-metric">
+              <p className="p-metric__label">Composite score</p>
+              <div className="p-metric__value" style={{ marginTop: 4 }}>
                 {typeof result.compositeScore === 'number' ? result.compositeScore.toFixed(2) : 'N/A'}
               </div>
-              <p className="metric-card__caption">Higher scores lead to faster auto decisions.</p>
+              <p className="p-metric__caption">Higher scores lead to faster auto decisions.</p>
             </div>
           </div>
 
-          <div className="inline-actions" style={{ gridTemplateColumns: '1fr 1fr', marginTop: 22 }}>
+          <div className="p-grid-actions" style={{ gridTemplateColumns: '1fr 1fr', marginTop: 32 }}>
             <button
               type="button"
               className="button button--secondary"
@@ -146,21 +146,21 @@ export default function ClaimSubmit() {
   }
 
   return (
-    <div className="page-stack">
-      <section className="panel-card">
-        <div className="section-heading">
+    <div className="p-page-stack">
+      <section className="p-card">
+        <div className="p-section-heading">
           <div>
-            <p className="eyebrow">New claim</p>
-            <h2 className="page-title" style={{ fontSize: '2.2rem' }}>
+            <p className="p-eyebrow">New claim</p>
+            <h2 className="p-title p-title--section">
               Report a blocked order
             </h2>
-            <p className="card-copy">Attach the order, platform, disruption type, and live location in one flow.</p>
+            <p className="p-subtext">Attach the order, platform, disruption type, and live location in one flow.</p>
           </div>
         </div>
 
-        {error ? <div className="alert alert--error" style={{ marginTop: 20 }}>{error}</div> : null}
+        {error ? <div className="p-alert p-alert--error" style={{ marginTop: 20 }}>{error}</div> : null}
 
-        <div className="form-grid" style={{ marginTop: 24 }}>
+        <div className="form-grid" style={{ marginTop: 24, gap: 24 }}>
           <div className="field">
             <label htmlFor="order-id">Order ID</label>
             <input
@@ -170,7 +170,7 @@ export default function ClaimSubmit() {
               onChange={(event) => setOrderId(event.target.value.toUpperCase())}
               placeholder="ZOM-20260403-000001"
             />
-            <span className="helper-copy">{isAutoFilled ? 'Pre-filled from your last order context.' : 'You can edit this before submitting.'}</span>
+            <span className="p-helper-copy" style={{ marginTop: 6, display: 'block' }}>{isAutoFilled ? 'Pre-filled from your last order context.' : 'You can edit this before submitting.'}</span>
           </div>
 
           <div className="field">
@@ -180,7 +180,7 @@ export default function ClaimSubmit() {
                 <button
                   key={platformKey}
                   type="button"
-                  className={`toggle-chip${platform === platformKey ? ' toggle-chip--active' : ''}`}
+                  className={`p-toggle${platform === platformKey ? ' p-toggle--active' : ''}`}
                   onClick={() => setPlatform(platformKey)}
                 >
                   {formatPlatform(platformKey)}
@@ -198,50 +198,51 @@ export default function ClaimSubmit() {
                   type="button"
                   className={`selection-card${disruptionType === option.value ? ' selection-card--active' : ''}`}
                   onClick={() => setDisruptionType(option.value)}
+                  style={{ textAlign: 'left' }}
                 >
-                  <strong>{option.label}</strong>
-                  <div className="helper-copy">{option.description}</div>
+                  <strong className="p-title p-title--card" style={{ marginTop: 0, fontSize: '1.1rem' }}>{option.label}</strong>
+                  <div className="p-helper-copy">{option.description}</div>
                 </button>
               ))}
             </div>
           </div>
         </div>
 
-        <div className="stats-grid" style={{ marginTop: 24 }}>
-          <div className="metric-card">
-            <p className="metric-card__label">
+        <div className="p-stats-grid" style={{ marginTop: 32 }}>
+          <div className="p-metric">
+            <p className="p-metric__label">
               <Crosshair size={14} style={{ marginRight: 6, verticalAlign: 'text-bottom' }} />
               GPS evidence
             </p>
-            <div className="metric-card__value" style={{ fontSize: '1.1rem' }}>
+            <div className="p-metric__value" style={{ fontSize: '1.2rem', marginTop: 4 }}>
               {gpsCoords ? `${gpsCoords.lat.toFixed(4)}, ${gpsCoords.lng.toFixed(4)}` : 'Waiting'}
             </div>
-            <p className="metric-card__caption">{locationSummary}</p>
+            <p className="p-metric__caption">{locationSummary}</p>
           </div>
-          <div className="metric-card">
-            <p className="metric-card__label">
+          <div className="p-metric">
+            <p className="p-metric__label">
               <MapPinned size={14} style={{ marginRight: 6, verticalAlign: 'text-bottom' }} />
               Network fallback
             </p>
-            <div className="metric-card__value" style={{ fontSize: '1.1rem' }}>
+            <div className="p-metric__value" style={{ fontSize: '1.2rem', marginTop: 4 }}>
               {networkCoords ? `${networkCoords.lat.toFixed(4)}, ${networkCoords.lng.toFixed(4)}` : 'Unavailable'}
             </div>
-            <p className="metric-card__caption">Used if a high-accuracy GPS lock is slow or blocked.</p>
+            <p className="p-metric__caption">Used if a high-accuracy GPS lock is slow or blocked.</p>
           </div>
-          <div className="metric-card">
-            <p className="metric-card__label">
+          <div className="p-metric">
+            <p className="p-metric__label">
               <Radar size={14} style={{ marginRight: 6, verticalAlign: 'text-bottom' }} />
               Claim preview
             </p>
-            <div className="metric-card__value" style={{ fontSize: '1.1rem' }}>
+            <div className="p-metric__value" style={{ fontSize: '1.2rem', marginTop: 4 }}>
               {formatPlatform(platform)} · {formatDisruption(disruptionType)}
             </div>
-            <p className="metric-card__caption">Order {orderId || 'not entered yet'}</p>
+            <p className="p-metric__caption">Order {orderId || 'not entered yet'}</p>
           </div>
         </div>
 
-        <div className="inline-actions" style={{ gridTemplateColumns: '1fr', marginTop: 28 }}>
-          <button type="button" className="button button--primary" onClick={handleSubmit} disabled={submitting}>
+        <div className="p-grid-actions" style={{ marginTop: 36 }}>
+          <button type="button" className="button button--primary" onClick={handleSubmit} disabled={submitting} style={{ minWidth: 200 }}>
             {submitting ? 'Submitting claim...' : 'Submit claim'}
           </button>
         </div>

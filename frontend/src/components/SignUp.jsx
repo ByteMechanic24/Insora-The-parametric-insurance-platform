@@ -1,9 +1,28 @@
 import React, { useState } from 'react';
-import { ArrowRight, Mail, Phone, ShieldCheck } from 'lucide-react';
+import { ArrowRight, Mail, Phone, ShieldCheck, Bike, BadgeIndianRupee, CheckCircle2, Lock } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useWorker } from '../App';
 import { persistWorkerAuth, signUpWorker, warmServices } from '../utils/api';
 import { primeWorkerReads } from '../utils/workerDataPrefetch';
+import '../styles/auth.css';
+
+const perks = [
+  {
+    icon: ShieldCheck,
+    title: 'Weekly parametric cover',
+    copy: 'Rain, heat, air quality, strikes — activate protection for the week in minutes.',
+  },
+  {
+    icon: BadgeIndianRupee,
+    title: 'UPI-ready payouts',
+    copy: 'Approved claims go directly to your UPI ID. No branch visits, no waiting.',
+  },
+  {
+    icon: Bike,
+    title: 'Built for riders',
+    copy: 'Swiggy, Zomato, delivery platforms — one account covers your whole week.',
+  },
+];
 
 export default function SignUp() {
   const navigate = useNavigate();
@@ -62,101 +81,156 @@ export default function SignUp() {
 
   return (
     <div className="page-stack">
-      <section className="sign-in-shell">
-        <div className="sign-in-grid">
-          <div className="sign-in-intro hero-card">
-            <div>
-              <p className="eyebrow" style={{ color: 'rgba(255,255,255,0.72)' }}>
-                Create your worker account
-              </p>
-              <h2 className="page-title" style={{ color: 'white', maxWidth: 560 }}>
-                Sign up first, then we’ll take you to onboarding.
-              </h2>
-              <p className="hero-card__subtext" style={{ maxWidth: 520, marginTop: 14 }}>
-                Your email, phone number, and password are saved to your worker account in MongoDB Atlas.
-              </p>
+      <div className="auth-grid">
+
+        {/* ── LEFT: Intro panel ── */}
+        <div className="auth-intro">
+          <div>
+            <div className="auth-intro__badge">
+              <Bike size={13} />
+              Rider account setup
             </div>
+            <h2 className="auth-intro__title">
+              Get protected,<br /><span>start earning safely</span>
+            </h2>
+            <p className="auth-intro__sub">
+              Your email, mobile number, and password create your GigShield worker account — stored securely in MongoDB Atlas.
+            </p>
           </div>
 
-          <section className="panel-card sign-in-card">
-            <div className="section-heading">
-              <div>
-                <p className="eyebrow">Sign up</p>
-                <h3 className="page-title" style={{ fontSize: '2.1rem' }}>
-                  Get protected
-                </h3>
+          <div className="auth-perks">
+            {perks.map(({ icon: Icon, title, copy }) => (
+              <div className="auth-perk" key={title}>
+                <div className="auth-perk__icon">
+                  <Icon size={18} />
+                </div>
+                <div>
+                  <p className="auth-perk__title">{title}</p>
+                  <p className="auth-perk__copy">{copy}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          <div className="auth-trust">
+            <span className="auth-trust__item">
+              <CheckCircle2 size={13} />
+              No credit card required
+            </span>
+            <span className="auth-trust__item">
+              <ShieldCheck size={13} />
+              Secure &amp; encrypted
+            </span>
+            <span className="auth-trust__item">
+              <BadgeIndianRupee size={13} />
+              Free to start
+            </span>
+          </div>
+        </div>
+
+        {/* ── RIGHT: Form card ── */}
+        <section className="auth-card">
+          <div className="auth-card__header">
+            <p className="eyebrow">Create account</p>
+            <h3 className="auth-card__title">Get protected today</h3>
+            <p className="auth-card__sub">Sign up to activate weekly income cover for your delivery shifts.</p>
+          </div>
+
+          {error ? (
+            <div className="auth-error" role="alert">
+              <ShieldCheck size={16} style={{ color: '#c45b4e', flexShrink: 0 }} />
+              {error}
+            </div>
+          ) : null}
+
+          <form className="auth-form" onSubmit={handleSubmit}>
+            <div className="auth-field">
+              <label htmlFor="signup-email">Email address</label>
+              <div className="auth-input-wrap">
+                <span className="auth-input-icon"><Mail size={16} /></span>
+                <input
+                  id="signup-email"
+                  className="auth-input"
+                  type="email"
+                  placeholder="you@example.com"
+                  value={email}
+                  onChange={(event) => setEmail(event.target.value)}
+                />
               </div>
             </div>
 
-            {error ? <div className="alert alert--error sign-in-alert">{error}</div> : null}
-
-            <form className="sign-in-form" onSubmit={handleSubmit}>
-              <div className="field">
-                <label htmlFor="signup-email">Email</label>
-                <div className="input-prefix">
-                  <span><Mail size={16} /></span>
-                  <input
-                    id="signup-email"
-                    type="email"
-                    placeholder="you@example.com"
-                    value={email}
-                    onChange={(event) => setEmail(event.target.value)}
-                  />
-                </div>
+            <div className="auth-field">
+              <label htmlFor="signup-phone">Mobile number</label>
+              <div className="auth-input-wrap">
+                <span className="auth-input-icon"><Phone size={16} /></span>
+                <input
+                  id="signup-phone"
+                  className="auth-input"
+                  type="text"
+                  inputMode="numeric"
+                  maxLength={10}
+                  placeholder="10-digit number (e.g. 9876543210)"
+                  value={phone}
+                  onChange={(event) => setPhone(event.target.value.replace(/\D/g, ''))}
+                />
               </div>
+            </div>
 
-              <div className="field">
-                <label htmlFor="signup-phone">Mobile number</label>
-                <div className="input-prefix">
-                  <span><Phone size={16} /></span>
-                  <input
-                    id="signup-phone"
-                    type="text"
-                    inputMode="numeric"
-                    maxLength={10}
-                    placeholder="9876543210"
-                    value={phone}
-                    onChange={(event) => setPhone(event.target.value.replace(/\D/g, ''))}
-                  />
-                </div>
-              </div>
-
-              <div className="field">
-                <label htmlFor="signup-password">Password</label>
+            <div className="auth-field">
+              <label htmlFor="signup-password">Password</label>
+              <div className="auth-input-wrap">
+                <span className="auth-input-icon"><Lock size={16} /></span>
                 <input
                   id="signup-password"
+                  className="auth-input"
                   type="password"
                   placeholder="Minimum 8 characters"
                   value={password}
                   onChange={(event) => setPassword(event.target.value)}
                 />
               </div>
+            </div>
 
-              <div className="field">
-                <label htmlFor="signup-confirm-password">Confirm password</label>
+            <div className="auth-field">
+              <label htmlFor="signup-confirm-password">Confirm password</label>
+              <div className="auth-input-wrap">
+                <span className="auth-input-icon"><Lock size={16} /></span>
                 <input
                   id="signup-confirm-password"
+                  className="auth-input"
                   type="password"
                   placeholder="Re-enter your password"
                   value={confirmPassword}
                   onChange={(event) => setConfirmPassword(event.target.value)}
                 />
               </div>
+            </div>
 
-              <div className="inline-actions sign-in-actions">
-                <button type="submit" className="button button--primary" disabled={loading}>
-                  <ShieldCheck size={16} />
-                  {loading ? 'Creating account...' : 'Sign up and continue'}
-                </button>
-                <button type="button" className="button button--ghost" onClick={() => navigate('/sign-in')}>
-                  Already have an account
-                  <ArrowRight size={16} />
-                </button>
-              </div>
-            </form>
-          </section>
-        </div>
-      </section>
+            <div className="auth-actions">
+              <button type="submit" className="button button--primary" disabled={loading}>
+                <ShieldCheck size={16} />
+                {loading ? 'Creating account…' : 'Sign up and continue'}
+              </button>
+
+              <div className="auth-divider">or</div>
+
+              <button
+                type="button"
+                className="button button--ghost"
+                onClick={() => navigate('/sign-in')}
+              >
+                Already have an account
+                <ArrowRight size={16} />
+              </button>
+
+              <p className="auth-note">
+                No hidden fees · Your data is encrypted · Cancel anytime
+              </p>
+            </div>
+          </form>
+        </section>
+
+      </div>
     </div>
   );
 }

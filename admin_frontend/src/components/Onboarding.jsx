@@ -112,96 +112,38 @@ export default function Onboarding() {
   const plan = formatTier(tier);
 
   return (
-    <div className="page-stack">
-      <section className="hero-card">
-        <div className="hero-card__grid">
-          <div>
-            <p className="eyebrow" style={{ color: 'rgba(255,255,255,0.72)' }}>
-              Built for India’s delivery workforce
-            </p>
-            <h2 className="page-title" style={{ color: 'white', maxWidth: 620 }}>
-              Protect each working week with faster claims and cleaner proof capture.
-            </h2>
-            <p className="hero-card__subtext" style={{ maxWidth: 560, marginTop: 14 }}>
-              GigShield gives riders a calm place to enroll, prove a disruption, and understand what
-              happens next. The experience stays mobile-first without looking like a temporary demo.
-            </p>
-            <div className="pill-row" style={{ marginTop: 18 }}>
-              <span className="tag">
-                <Shield size={14} />
-                Weekly coverage
-              </span>
-              <span className="tag">
-                <Wallet size={14} />
-                UPI payout setup
-              </span>
-              <span className="tag">
-                <Sparkles size={14} />
-                Faster evidence capture
-              </span>
-            </div>
-          </div>
+    <div className="p-page-stack">
 
-          <div className="panel-card" style={{ background: 'rgba(255,255,255,0.12)', color: 'white' }}>
-            <p className="eyebrow" style={{ color: 'rgba(255,255,255,0.72)' }}>
-              Why riders use it
-            </p>
-            <div className="stats-grid">
-              <div className="metric-card" style={{ background: 'rgba(255,255,255,0.08)', color: 'white' }}>
-                <p className="metric-card__label" style={{ color: 'rgba(255,255,255,0.72)' }}>
-                  Setup time
-                </p>
-                <div className="metric-card__value">3 min</div>
-                <p className="metric-card__caption" style={{ color: 'rgba(255,255,255,0.72)' }}>
-                  Guided onboarding
-                </p>
-              </div>
-              <div className="metric-card" style={{ background: 'rgba(255,255,255,0.08)', color: 'white' }}>
-                <p className="metric-card__label" style={{ color: 'rgba(255,255,255,0.72)' }}>
-                  Claim inputs
-                </p>
-                <div className="metric-card__value">4</div>
-                <p className="metric-card__caption" style={{ color: 'rgba(255,255,255,0.72)' }}>
-                  Order, platform, disruption, GPS
-                </p>
-              </div>
-              <div className="metric-card" style={{ background: 'rgba(255,255,255,0.08)', color: 'white' }}>
-                <p className="metric-card__label" style={{ color: 'rgba(255,255,255,0.72)' }}>
-                  Designed for
-                </p>
-                <div className="metric-card__value">7 cities</div>
-                <p className="metric-card__caption" style={{ color: 'rgba(255,255,255,0.72)' }}>
-                  With zone-based pricing
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
 
-      <section className="panel-card">
-        <div className="section-heading">
+      <section className="p-card">
+        <div className="p-section-heading">
           <div>
-            <p className="eyebrow">Onboarding</p>
-            <h3 className="page-title" style={{ fontSize: '2.2rem' }}>
+            <p className="p-eyebrow">Onboarding</p>
+            <h3 className="p-title p-title--section">
               Start your coverage
             </h3>
-            <p className="card-copy">We’ll set up your payout destination, working city, and weekly plan.</p>
+            <p className="p-subtext">We’ll set up your payout destination, working city, and weekly plan.</p>
           </div>
-          <div className="stepper">
+          <div className="stepper" style={{ display: 'flex', gap: 12, flexWrap: 'wrap' }}>
             {['Profile', 'Plan', 'Review'].map((label, index) => (
-              <div key={label} className={`step-chip${step === index + 1 ? ' step-chip--active' : ''}`}>
-                <span className="step-chip__index">{index + 1}</span>
+              <div key={label} className={`p-tag${step === index + 1 ? ' p-tag--brand' : ''}`} style={{ padding: '8px 14px' }}>
+                <span style={{ 
+                  display: 'inline-grid', placeItems: 'center', width: 22, height: 22, borderRadius: 11, 
+                  background: step === index + 1 ? '#ffffff' : 'rgba(23,32,51,0.1)',
+                  marginRight: 8, fontSize: '0.85rem'
+                }}>
+                  {index + 1}
+                </span>
                 <span>{label}</span>
               </div>
             ))}
           </div>
         </div>
 
-        {error ? <div className="alert alert--error" style={{ marginTop: 20 }}>{error}</div> : null}
+        {error ? <div className="p-alert p-alert--error" style={{ marginTop: 20 }}>{error}</div> : null}
 
         {step === 1 ? (
-          <div className="form-grid" style={{ marginTop: 24 }}>
+          <div className="form-grid" style={{ marginTop: 24, gap: 24 }}>
             <div className="field">
               <label htmlFor="phone">Mobile number</label>
               <div className="input-prefix">
@@ -250,22 +192,22 @@ export default function Onboarding() {
 
             <div className="field">
               <label>Estimated weekly premium</label>
-              <div className="metric-card">
-                <p className="metric-card__label">{plan.label}</p>
-                <div className="metric-card__value">₹{estimatedPremium}</div>
-                <p className="metric-card__caption">Adjusted for {city} rider density and disruption risk.</p>
+              <div className="p-metric">
+                <p className="p-metric__label">{plan.label}</p>
+                <div className="p-metric__value">₹{estimatedPremium}</div>
+                <p className="p-metric__caption">Adjusted for {city} rider density and disruption risk.</p>
               </div>
             </div>
 
             <div className="field field--full">
               <div className="fieldset">
-                <span className="fieldset__label">Active delivery zones</span>
-                <div className="zone-grid">
+                <span className="p-metric__label" style={{ marginBottom: 12 }}>Active delivery zones</span>
+                <div className="zone-grid" style={{ display: 'flex', gap: 10, flexWrap: 'wrap' }}>
                   {(CITIES[city] || []).map((zone) => (
                     <button
                       key={zone}
                       type="button"
-                      className={`zone-pill${operatingZones.includes(zone) ? ' zone-pill--active' : ''}`}
+                      className={`p-toggle${operatingZones.includes(zone) ? ' p-toggle--active' : ''}`}
                       onClick={() => toggleZone(zone)}
                     >
                       {zone}
@@ -278,7 +220,7 @@ export default function Onboarding() {
         ) : null}
 
         {step === 2 ? (
-          <div className="selection-grid selection-grid--two" style={{ marginTop: 24 }}>
+          <div className="p-grid-2" style={{ marginTop: 24, padding: '12px 0' }}>
             {['basic', 'standard', 'premium'].map((planKey) => {
               const tierMeta = formatTier(planKey);
               const active = tier === planKey;
@@ -289,17 +231,18 @@ export default function Onboarding() {
                   type="button"
                   className={`selection-card${active ? ' selection-card--active' : ''}`}
                   onClick={() => setTier(planKey)}
+                  style={{ textAlign: 'left', display: 'block', width: '100%' }}
                 >
-                  <div className="section-heading">
+                  <div className="p-section-heading" style={{ marginBottom: 16 }}>
                     <div>
-                      <p className="eyebrow">{planKey === 'standard' ? 'Best balance' : 'Coverage plan'}</p>
-                      <h3 style={{ margin: 0, fontSize: '1.5rem', fontFamily: "'Space Grotesk', sans-serif" }}>
+                      <p className="p-eyebrow" style={{ marginBottom: 8, padding: '4px 8px', fontSize: '0.65rem' }}>{planKey === 'standard' ? 'Best balance' : 'Coverage plan'}</p>
+                      <h3 className="p-title p-title--card">
                         {tierMeta.label}
                       </h3>
                     </div>
-                    <span className="status-pill">{tierMeta.price}</span>
+                    <span className="p-tag p-tag--brand">{tierMeta.price}</span>
                   </div>
-                  <div className="helper-copy" style={{ marginTop: 16 }}>
+                  <div className="p-helper-copy" style={{ marginTop: 16 }}>
                     {PLAN_FEATURES[planKey].map((feature) => (
                       <div key={feature} style={{ marginTop: 8 }}>
                         {feature}
@@ -313,28 +256,28 @@ export default function Onboarding() {
         ) : null}
 
         {step === 3 ? (
-          <div className="stats-grid" style={{ marginTop: 24 }}>
-            <div className="metric-card">
-              <p className="metric-card__label">Weekly plan</p>
-              <div className="metric-card__value">{plan.label}</div>
-              <p className="metric-card__caption">Estimated premium ₹{estimatedPremium}</p>
+          <div className="p-stats-grid" style={{ marginTop: 24 }}>
+            <div className="p-metric">
+              <p className="p-metric__label">Weekly plan</p>
+              <div className="p-metric__value">{plan.label}</div>
+              <p className="p-metric__caption">Estimated premium ₹{estimatedPremium}</p>
             </div>
-            <div className="metric-card">
-              <p className="metric-card__label">Payout destination</p>
-              <div className="metric-card__value" style={{ fontSize: '1.35rem' }}>
+            <div className="p-metric">
+              <p className="p-metric__label">Payout destination</p>
+              <div className="p-metric__value" style={{ fontSize: '1.35rem' }}>
                 {upiHandle}
               </div>
-              <p className="metric-card__caption">Linked to your worker account</p>
+              <p className="p-metric__caption">Linked to your worker account</p>
             </div>
-            <div className="metric-card">
-              <p className="metric-card__label">Delivery zones</p>
-              <div className="metric-card__value" style={{ fontSize: '1.35rem' }}>
+            <div className="p-metric">
+              <p className="p-metric__label">Delivery zones</p>
+              <div className="p-metric__value" style={{ fontSize: '1.35rem' }}>
                 {operatingZones.length}
               </div>
-              <p className="metric-card__caption">{operatingZones.join(', ')}</p>
+              <p className="p-metric__caption">{operatingZones.join(', ')}</p>
             </div>
-            <div className="field field--full">
-              <div className="alert alert--info">
+            <div className="field field--full" style={{ marginTop: 12 }}>
+              <div className="p-alert p-alert--error" style={{ background: 'rgba(14, 124, 134, 0.08)', borderColor: 'rgba(14, 124, 134, 0.15)', color: 'var(--brand-deep)' }}>
                 GigShield only covers verified disruption-related income loss. Health incidents, vehicle damage,
                 and generic accidents are outside this policy.
               </div>
@@ -342,7 +285,7 @@ export default function Onboarding() {
           </div>
         ) : null}
 
-        <div className="inline-actions" style={{ gridTemplateColumns: 'auto 1fr', marginTop: 28 }}>
+        <div className="p-grid-actions" style={{ gridTemplateColumns: 'auto 1fr', marginTop: 32, display: 'grid' }}>
           {step > 1 ? (
             <button type="button" className="button button--ghost" onClick={() => setStep((current) => current - 1)}>
               Back

@@ -164,7 +164,8 @@ function AppShell() {
   const currentView = navItems.find((item) =>
     item.exact ? location.pathname === item.to : location.pathname.startsWith(item.to)
   );
-  const isStandaloneGuestView = !isLoggedIn || isLandingScreen;
+  const isOnboardingScreen = location.pathname === '/onboarding';
+  const isStandaloneGuestView = !isLoggedIn || isLandingScreen || isOnboardingScreen;
 
   return (
     <div className="app-shell">
@@ -236,7 +237,7 @@ function AppShell() {
       </header>
 
       <div className={`layout-grid${isStandaloneGuestView ? ' layout-grid--guest' : ''}`}>
-        {isLoggedIn && !isLandingScreen ? (
+        {isLoggedIn && !isStandaloneGuestView ? (
           <>
             <button
               type="button"

@@ -17,6 +17,7 @@ import {
   formatPlatform,
   formatRupees,
 } from '../utils/formatting';
+import '../styles/app.css';
 
 export default function Dashboard() {
   const navigate = useNavigate();
@@ -75,19 +76,20 @@ export default function Dashboard() {
 
   return (
     <div className="page-stack">
-      <section className="hero-card">
-        <div className="hero-card__grid">
+      <section className="app-hero">
+        <div className="app-hero__grid">
           <div>
-            <p className="eyebrow" style={{ color: 'rgba(255,255,255,0.72)' }}>
+            <p className="eyebrow">
               Welcome back
             </p>
-            <h2 className="page-title" style={{ color: 'white', maxWidth: 620 }}>
-              {policy ? 'Your coverage is live and ready for the next disruption.' : 'Finish activating your protection.'}
+            <h2 className="app-hero__title" style={{ maxWidth: 620 }}>
+              {policy ? <span>Your coverage is live</span> : <span>Finish activating</span>}
+              {policy ? ' and ready for the next disruption.' : ' your protection.'}
             </h2>
-            <p className="hero-card__subtext" style={{ maxWidth: 560, marginTop: 14 }}>
+            <p className="app-hero__sub" style={{ maxWidth: 560 }}>
               Use the dashboard to check your policy window, review claim decisions, and submit a new blocked-order claim in a few taps.
             </p>
-            <div className="pill-row" style={{ marginTop: 18 }}>
+            <div className="pill-row">
               <span className="tag">
                 <MapPin size={14} />
                 {worker?.city || 'City not set'}
@@ -99,13 +101,13 @@ export default function Dashboard() {
             </div>
           </div>
 
-          <div className="hero-card__actions">
-            <div className="metric-card" style={{ background: 'rgba(255,255,255,0.1)', color: 'white' }}>
-              <p className="metric-card__label" style={{ color: 'rgba(255,255,255,0.72)' }}>
+          <div className="app-hero__actions">
+            <div className="app-metric" style={{ background: 'transparent', padding: '16px' }}>
+              <p className="app-metric__label">
                 Total approved payout
               </p>
-              <div className="hero-card__value">{formatRupees(paidOut)}</div>
-              <p className="metric-card__caption" style={{ color: 'rgba(255,255,255,0.72)' }}>
+              <div className="app-metric__value">{formatRupees(paidOut)}</div>
+              <p className="app-metric__caption">
                 Across {approvedClaims.length} approved claims
               </p>
             </div>
@@ -126,26 +128,26 @@ export default function Dashboard() {
         </div>
       </section>
 
-      <div className="stats-grid">
-        <div className="metric-card">
-          <p className="metric-card__label">Claims this month</p>
-          <div className="metric-card__value">{claimsLoading && claims.length === 0 ? '...' : claims.length}</div>
-          <p className="metric-card__caption">Fresh submissions tied to your worker account.</p>
+      <div className="app-stats-grid">
+        <div className="app-metric">
+          <p className="app-metric__label">Claims this month</p>
+          <div className="app-metric__value">{claimsLoading && claims.length === 0 ? '...' : claims.length}</div>
+          <p className="app-metric__caption">Fresh submissions tied to your worker account.</p>
         </div>
-        <div className="metric-card">
-          <p className="metric-card__label">Needs attention</p>
-          <div className="metric-card__value">{claimsLoading && claims.length === 0 ? '...' : reviewQueue}</div>
-          <p className="metric-card__caption">Claims still in auto recheck or manual review.</p>
+        <div className="app-metric">
+          <p className="app-metric__label">Needs attention</p>
+          <div className="app-metric__value">{claimsLoading && claims.length === 0 ? '...' : reviewQueue}</div>
+          <p className="app-metric__caption">Claims still in auto recheck or manual review.</p>
         </div>
-        <div className="metric-card">
-          <p className="metric-card__label">Protected payout flow</p>
-          <div className="metric-card__value">{worker?.upiHandle || 'UPI set'}</div>
-          <p className="metric-card__caption">Settlement route for successful payouts.</p>
+        <div className="app-metric">
+          <p className="app-metric__label">Protected payout flow</p>
+          <div className="app-metric__value">{worker?.upiHandle || 'UPI set'}</div>
+          <p className="app-metric__caption">Settlement route for successful payouts.</p>
         </div>
       </div>
 
       {policyLoading ? (
-        <section className="panel-card">
+        <section className="app-panel">
           <div className="section-heading">
             <div>
               <p className="eyebrow">Active policy</p>
@@ -158,14 +160,14 @@ export default function Dashboard() {
         </section>
       ) : policy ? <PolicyCard policy={policy} /> : null}
 
-      <section className="panel-card">
+      <section className="app-panel">
         <div className="section-heading">
           <div>
             <p className="eyebrow">Recent claims</p>
             <h3 className="page-title" style={{ fontSize: '2rem' }}>
               Your latest activity
             </h3>
-            <p className="card-copy">We surface the newest claim decisions first, with payout and score detail.</p>
+            <p className="card-copy">We surface the newest claim decisions first.</p>
           </div>
           <div className="inline-actions" style={{ gridTemplateColumns: 'auto auto' }}>
             <button type="button" className="button button--ghost" onClick={() => fetchData()}>
@@ -182,8 +184,8 @@ export default function Dashboard() {
         {claimsLoading && recentClaims.length === 0 ? (
           <div style={{ marginTop: 20, display: 'grid', gap: 16 }}>
             {[1, 2, 3].map((placeholder) => (
-              <div key={placeholder} className="timeline-card">
-                <div className="history-item__row">
+              <div key={placeholder} className="app-timeline-card">
+                <div className="app-timeline-row">
                   <strong>Loading recent claim...</strong>
                   <span className="helper-copy">Fetching latest activity</span>
                 </div>
@@ -200,8 +202,8 @@ export default function Dashboard() {
               const decision = formatDecision(claim.decision);
 
               return (
-                <div key={claim._id} className="timeline-card">
-                  <div className="timeline-row">
+                <div key={claim._id} className="app-timeline-card">
+                  <div className="app-timeline-row">
                     <div className="timeline-item">
                       <div className="pill-row">
                         <span className={`platform-chip platform-chip--${claim.platform}`}>{formatPlatform(claim.platform)}</span>

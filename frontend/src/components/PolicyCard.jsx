@@ -11,7 +11,7 @@ export default function PolicyCard({ policy }) {
   const isActive = policy.status === 'active';
 
   return (
-    <div className="panel-card">
+    <div className="app-panel">
       <div className="section-heading">
         <div>
           <p className="eyebrow">Current policy</p>
@@ -25,28 +25,28 @@ export default function PolicyCard({ policy }) {
         </span>
       </div>
 
-      <div className="stats-grid" style={{ marginTop: 20 }}>
-        <div className="metric-card">
-          <p className="metric-card__label">Weekly premium</p>
-          <div className="metric-card__value">{formatRupees(policy.premiumAmount)}</div>
-          <p className="metric-card__caption">{tier.price}</p>
+      <div className="app-stats-grid" style={{ marginTop: 20 }}>
+        <div className="app-metric">
+          <p className="app-metric__label">Weekly premium</p>
+          <div className="app-metric__value">{formatRupees(policy.premiumAmount)}</div>
+          <p className="app-metric__caption">{tier.price}</p>
         </div>
-        <div className="metric-card">
-          <p className="metric-card__label">Coverage window</p>
-          <div className="metric-card__value" style={{ fontSize: '1.35rem' }}>
+        <div className="app-metric">
+          <p className="app-metric__label">Coverage window</p>
+          <div className="app-metric__value" style={{ fontSize: '1.35rem' }}>
             <CalendarDays size={18} style={{ marginRight: 8, verticalAlign: 'text-bottom' }} />
             {formatDate(policy.weekStart, { day: 'numeric', month: 'short' })}
           </div>
-          <p className="metric-card__caption">
+          <p className="app-metric__caption">
             Ends {formatDate(policy.weekEnd, { day: 'numeric', month: 'short' })}
           </p>
         </div>
-        <div className="metric-card">
-          <p className="metric-card__label">Risk score</p>
-          <div className="metric-card__value">
+        <div className="app-metric">
+          <p className="app-metric__label">Risk score</p>
+          <div className="app-metric__value">
             {typeof policy.riskScore === 'number' ? policy.riskScore.toFixed(2) : '0.50'}
           </div>
-          <p className="metric-card__caption">Used to price weekly coverage</p>
+          <p className="app-metric__caption">Used to price weekly coverage</p>
         </div>
       </div>
     </div>

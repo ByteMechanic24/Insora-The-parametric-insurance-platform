@@ -55,43 +55,44 @@ export default function Dashboard() {
   }
 
   return (
-    <div className="page-stack">
-      <section className="hero-card">
-        <div className="hero-card__grid">
+    <div className="p-page-stack">
+      <section className="p-card p-card--hero">
+        <div className="hero-card__grid" style={{ zIndex: 1, position: 'relative' }}>
           <div>
-            <p className="eyebrow" style={{ color: 'rgba(255,255,255,0.72)' }}>
+            <p className="p-eyebrow">
+              <span className="lp-eyebrow__dot" aria-hidden="true" style={{ background: 'var(--brand)', width: 6, height: 6, borderRadius: '50%' }} />
               Welcome back
             </p>
-            <h2 className="page-title" style={{ color: 'white', maxWidth: 620 }}>
+            <h2 className="p-title p-title--hero">
               {policy ? 'Your coverage is live and ready for the next disruption.' : 'Finish activating your protection.'}
             </h2>
-            <p className="hero-card__subtext" style={{ maxWidth: 560, marginTop: 14 }}>
+            <p className="p-subtext">
               Use the dashboard to check your policy window, review claim decisions, and submit a new blocked-order claim in a few taps.
             </p>
-            <div className="pill-row" style={{ marginTop: 18 }}>
-              <span className="tag">
+            <div className="p-pill-row" style={{ marginTop: 24 }}>
+              <span className="p-tag p-tag--brand">
                 <MapPin size={14} />
                 {worker?.city || 'City not set'}
               </span>
-              <span className="tag">
+              <span className="p-tag p-tag--brand">
                 <Shield size={14} />
                 {worker?.tier ? `${worker.tier} tier` : 'No tier'}
               </span>
             </div>
           </div>
 
-          <div className="hero-card__actions">
-            <div className="metric-card" style={{ background: 'rgba(255,255,255,0.1)', color: 'white' }}>
-              <p className="metric-card__label" style={{ color: 'rgba(255,255,255,0.72)' }}>
+          <div style={{ display: 'grid', alignContent: 'start', gap: 16 }}>
+            <div className="p-metric" style={{ background: 'rgba(255,255,255,0.95)' }}>
+              <p className="p-metric__label">
                 Total approved payout
               </p>
-              <div className="hero-card__value">{formatRupees(paidOut)}</div>
-              <p className="metric-card__caption" style={{ color: 'rgba(255,255,255,0.72)' }}>
+              <div className="p-metric__value" style={{ marginTop: 6 }}>{formatRupees(paidOut)}</div>
+              <p className="p-metric__caption">
                 Across {approvedClaims.length} approved claims
               </p>
             </div>
-            <div className="inline-actions" style={{ gridTemplateColumns: '1fr 1fr' }}>
-              <button type="button" className="button button--primary" onClick={() => navigate('/claim')} disabled={!policy}>
+            <div className="p-grid-actions">
+              <button type="button" className="button button--secondary" onClick={() => navigate('/claim')} disabled={!policy}>
                 New claim
               </button>
               <button type="button" className="button button--ghost" onClick={() => navigate('/history')}>
@@ -102,34 +103,36 @@ export default function Dashboard() {
         </div>
       </section>
 
-      <div className="stats-grid">
-        <div className="metric-card">
-          <p className="metric-card__label">Claims this month</p>
-          <div className="metric-card__value">{claims.length}</div>
-          <p className="metric-card__caption">Fresh submissions tied to your worker account.</p>
+      <div className="p-stats-grid">
+        <div className="p-metric">
+          <p className="p-metric__label">Claims this month</p>
+          <div className="p-metric__value" style={{ marginTop: 4 }}>{claims.length}</div>
+          <p className="p-metric__caption">Fresh submissions tied to your worker account.</p>
         </div>
-        <div className="metric-card">
-          <p className="metric-card__label">Needs attention</p>
-          <div className="metric-card__value">{reviewQueue}</div>
-          <p className="metric-card__caption">Claims still in auto recheck or manual review.</p>
+        <div className="p-metric">
+          <p className="p-metric__label">Needs attention</p>
+          <div className="p-metric__value" style={{ marginTop: 4 }}>{reviewQueue}</div>
+          <p className="p-metric__caption">Claims still in auto recheck or manual review.</p>
         </div>
-        <div className="metric-card">
-          <p className="metric-card__label">Protected payout flow</p>
-          <div className="metric-card__value">{worker?.upiHandle || 'UPI set'}</div>
-          <p className="metric-card__caption">Settlement route for successful payouts.</p>
+        <div className="p-metric">
+          <p className="p-metric__label">Protected payout flow</p>
+          <div className="p-metric__value" style={{ marginTop: 4, fontSize: '1.4rem' }}>{worker?.upiHandle || 'UPI set'}</div>
+          <p className="p-metric__caption">Settlement route for successful payouts.</p>
         </div>
       </div>
 
       {policy ? <PolicyCard policy={policy} /> : null}
 
-      <section className="panel-card">
-        <div className="section-heading">
+      <section className="p-card">
+        <div className="p-section-heading">
           <div>
-            <p className="eyebrow">Recent claims</p>
-            <h3 className="page-title" style={{ fontSize: '2rem' }}>
+            <p className="p-eyebrow">
+              Recent claims
+            </p>
+            <h3 className="p-title p-title--section">
               Your latest activity
             </h3>
-            <p className="card-copy">We surface the newest claim decisions first, with payout and score detail.</p>
+            <p className="p-subtext">We surface the newest claim decisions first, with payout and score detail.</p>
           </div>
           <button type="button" className="button button--ghost" onClick={() => navigate('/history')}>
             Full history
@@ -138,37 +141,37 @@ export default function Dashboard() {
         </div>
 
         {recentClaims.length === 0 ? (
-          <div className="empty-state" style={{ marginTop: 20 }}>
+          <div className="p-empty" style={{ marginTop: 20 }}>
             Your claim timeline is empty. Submit a disruption claim when an order gets blocked by real-world conditions.
           </div>
         ) : (
-          <div style={{ marginTop: 20, display: 'grid', gap: 16 }}>
+          <div className="p-list" style={{ marginTop: 20 }}>
             {recentClaims.map((claim) => {
               const decision = formatDecision(claim.decision);
 
               return (
-                <div key={claim._id} className="timeline-card">
-                  <div className="timeline-row">
-                    <div className="timeline-item">
-                      <div className="pill-row">
-                        <span className={`platform-chip platform-chip--${claim.platform}`}>{formatPlatform(claim.platform)}</span>
-                        <span className={`decision-chip decision-chip--${decision.tone}`}>{decision.label}</span>
+                <div key={claim._id} className="p-list-item">
+                  <div className="p-list-item__row">
+                    <div>
+                      <div className="p-pill-row" style={{ marginBottom: 12 }}>
+                        <span className={`p-tag p-tag--${claim.platform}`}>{formatPlatform(claim.platform)}</span>
+                        <span className={`p-tag p-tag--${decision.tone === 'review' ? 'warning' : decision.tone}`}>{decision.label}</span>
                       </div>
-                      <strong style={{ fontSize: '1.08rem' }}>{claim.orderId}</strong>
-                      <span className="helper-copy">{formatDisruption(claim.disruptionType)}</span>
+                      <strong className="p-title p-title--card">{claim.orderId}</strong>
+                      <span className="p-helper-copy" style={{ display: 'block' }}>{formatDisruption(claim.disruptionType)}</span>
                     </div>
                     <div style={{ textAlign: 'right' }}>
-                      <strong style={{ display: 'block', fontSize: '1.1rem' }}>{formatRupees(claim.payout?.total || 0)}</strong>
-                      <span className="helper-copy">{formatDate(claim.submittedAt)}</span>
+                      <strong className="p-title" style={{ display: 'block', fontSize: '1.4rem', marginBottom: 4 }}>{formatRupees(claim.payout?.total || 0)}</strong>
+                      <span className="p-helper-copy">{formatDate(claim.submittedAt)}</span>
                     </div>
                   </div>
 
-                  <div className="pill-row">
-                    <span className="platform-chip">
+                  <div className="p-pill-row" style={{ marginTop: 12, borderTop: '1px dashed rgba(23,32,51,0.1)', paddingTop: 16 }}>
+                    <span className="p-tag">
                       <Clock3 size={14} />
                       Score {typeof claim.compositeScore === 'number' ? claim.compositeScore.toFixed(2) : 'N/A'}
                     </span>
-                    <span className="platform-chip">
+                    <span className="p-tag">
                       <Wallet size={14} />
                       {claim.decision === 'APPROVE' ? 'Payout released' : 'Outcome pending'}
                     </span>
