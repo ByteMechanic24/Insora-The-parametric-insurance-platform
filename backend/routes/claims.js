@@ -62,8 +62,12 @@ async function syncPayoutRecord(claim) {
 
 async function syncClaimEvidenceRecord(claim, checkResults = []) {
   const platformCheck = checkResults.find((result) => result.checkName === 'platform_api');
-  const environmentalCheck = checkResults.find((result) => result.checkName === 'environmental');
+  const environmentalCheck =
+    checkResults.find((result) => result.checkName === 'disruption_validation') ||
+    checkResults.find((result) => result.checkName === 'environmental');
+  const locationCheck = checkResults.find((result) => result.checkName === 'location_confidence');
   const photoCheck = checkResults.find((result) => result.checkName === 'photo_evidence');
+  const aiCheck = checkResults.find((result) => result.checkName === 'ai_final_verifier');
 
   return ClaimEvidence.findOneAndUpdate(
     { claimId: claim._id },
@@ -78,8 +82,10 @@ async function syncClaimEvidenceRecord(claim, checkResults = []) {
       satelliteSnapshot: photoCheck?.data || null,
       sourcePayloads: {
         platform: platformCheck?.data || null,
+        location: locationCheck?.data || null,
         environmental: environmentalCheck?.data || null,
         photos: photoCheck?.data || null,
+        aiFinal: aiCheck?.data || null,
       },
       updatedAt: new Date(),
     },
@@ -457,10 +463,12 @@ router.post('/', requireWorker, async (req, res) => {
     }
 
     // 7. Core Composite Engine Verification
-    const { compositeScore, decision, checkResults } = await runVerification(claim, mongoose, redisClient);
+    const { compositeScore, decision, decisionReason, checkResults } = await runVerification(claim, mongoose, redisClient);
 
     // 8. Parametric Structural Payout Extrapolations 
-    const envCheck = checkResults.find(r => r.checkName === 'environmental');
+    const envCheck =
+      checkResults.find(r => r.checkName === 'disruption_validation') ||
+      checkResults.find(r => r.checkName === 'environmental');
     const strandedHours = await estimateStrandedHours(claim.claimTimestamp, disruptionType, envCheck);
     
     const payoutBreakdown = calculatePayout(
@@ -477,6 +485,7 @@ router.post('/', requireWorker, async (req, res) => {
       checkResults,
       compositeScore,
       decision,
+      decisionReason,
       payout: payoutBreakdown,
       intakeStatus: 'verified',
       reviewStatus: decision === 'SOFT_HOLD' || decision === 'MANUAL_REVIEW' ? 'manual_review' : 'completed',
@@ -616,6 +625,7 @@ router.get('/admin/all', requireAdmin, async (req, res) => {
         'submittedAt',
         'compositeScore',
         'decision',
+        'decisionReason',
         'reviewStatus',
         'payoutStatus',
         'payout',
@@ -623,6 +633,7 @@ router.get('/admin/all', requireAdmin, async (req, res) => {
         'softHold',
       ].join(' '))
       .sort({ submittedAt: -1 })
+      .allowDiskUse(true)
       .skip(parsedSkip)
       .limit(parsedLimit)
       .lean();

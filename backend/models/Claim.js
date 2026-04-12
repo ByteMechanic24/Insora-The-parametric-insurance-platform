@@ -97,5 +97,7 @@ const ClaimSchema = new Schema({
 
 // Adding index as requested
 ClaimSchema.index({ "gps.lat": 1, "gps.lng": 1 });
+ClaimSchema.index({ submittedAt: -1 });
+ClaimSchema.index({ decision: 1, submittedAt: -1 });
 
 module.exports = mongoose.model("Claim", ClaimSchema);

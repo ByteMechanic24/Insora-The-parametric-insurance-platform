@@ -45,6 +45,21 @@ function getEnvConfig() {
       mapsApiKey: process.env.GOOGLE_MAPS_API_KEY || '',
       weatherApiKey: process.env.GOOGLE_WEATHER_API_KEY || process.env.GOOGLE_MAPS_API_KEY || '',
     },
+    openWeather: {
+      apiKey: process.env.OPENWEATHERMAP_API_KEY || '',
+      baseUrl: process.env.OPENWEATHERMAP_BASE_URL || 'https://api.openweathermap.org',
+    },
+    gemini: {
+      apiKey: process.env.GEMINI_API_KEY || '',
+      model: process.env.GEMINI_MODEL || 'gemini-2.5-flash',
+      fallbackModels: (process.env.GEMINI_FALLBACK_MODELS || 'gemini-2.5-flash-lite,gemini-2.5-pro')
+        .split(',')
+        .map((value) => value.trim())
+        .filter(Boolean),
+      baseUrl: process.env.GEMINI_BASE_URL || 'https://generativelanguage.googleapis.com/v1beta',
+      maxRetries: Number(process.env.GEMINI_MAX_RETRIES || 2),
+      retryDelayMs: Number(process.env.GEMINI_RETRY_DELAY_MS || 1200),
+    },
   };
 }
 
