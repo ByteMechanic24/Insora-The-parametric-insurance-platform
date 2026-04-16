@@ -44,6 +44,16 @@ async function safeCreateIndex(collection, spec, options = {}) {
   }
 }
 
+async function dropWorkerIndexesThatNoLongerMatch(collection) {
+  const indexes = await collection.indexes();
+
+  for (const index of indexes) {
+    if (index.name === 'upiHandle_1' && index.unique && !index.sparse) {
+      await collection.dropIndex(index.name);
+    }
+  }
+}
+
 async function createIndexes() {
   const Worker = mongoose.model('Worker');
   const Policy = mongoose.model('Policy');
@@ -64,8 +74,9 @@ async function createIndexes() {
   const ClaimCheck = mongoose.model('ClaimCheck');
 
   // ── Worker indexes ──────────────────────────────────────
+  await dropWorkerIndexesThatNoLongerMatch(Worker.collection);
   await safeCreateIndex(Worker.collection, { phone: 1 }, { unique: true });
-  await safeCreateIndex(Worker.collection, { upiHandle: 1 }, { unique: true });
+  await safeCreateIndex(Worker.collection, { upiHandle: 1 }, { unique: true, sparse: true });
   await safeCreateIndex(Worker.collection, { email: 1 }, { unique: true, sparse: true });
   await safeCreateIndex(Worker.collection, { googleSub: 1 }, { unique: true, sparse: true });
   await safeCreateIndex(Worker.collection, { deviceFingerprint: 1 });
