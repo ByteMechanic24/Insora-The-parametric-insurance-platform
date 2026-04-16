@@ -142,8 +142,11 @@ router.post('/sign-up', async (req, res) => {
           ? await bcrypt.compare(password, existingWorker.passwordHash).catch(() => false)
           : false;
 
-      if (!existingIdentity && passwordMatchesExisting) {
-        await upsertWorkerIdentity(existingWorker, { authType: 'email_password', email });
+      if (passwordMatchesExisting) {
+        if (!existingIdentity) {
+          await upsertWorkerIdentity(existingWorker, { authType: 'email_password', email });
+        }
+
         const recoveredSession = await createWorkerSession(existingWorker, req);
 
         await AuditLog.create({
@@ -151,7 +154,7 @@ router.post('/sign-up', async (req, res) => {
           actorId: existingWorker._id,
           entityType: 'worker_account',
           entityId: existingWorker._id,
-          action: 'worker_signup_recovered',
+          action: existingIdentity ? 'worker_signup_reused' : 'worker_signup_recovered',
           metadata: { sessionId: recoveredSession.sessionId },
           ipAddress: req.ip,
         });
